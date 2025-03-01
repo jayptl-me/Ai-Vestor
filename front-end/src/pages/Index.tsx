@@ -1,10 +1,9 @@
 
 import { useState, useEffect, useRef } from "react";
-import { ChartLine, TrendingUp, LineChart, Lightbulb, AreaChart, Globe } from "lucide-react";
+import { ChartLine, TrendingUp, AreaChart } from "lucide-react";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import FeaturesSection from "../components/FeaturesSection";
-import MarketOverview from "../components/MarketOverview";
 import ActionCard from "../components/ActionCard";
 import { Button } from "../components/ui/button";
 
@@ -47,7 +46,7 @@ const Index = () => {
         <FeaturesSection />
 
         {/* Market Overview Section */}
-        <MarketOverview />
+        {/* <MarketOverview /> */}
 
         {/* Call to Action Cards */}
         <section ref={sectionRef} className="section-padding">

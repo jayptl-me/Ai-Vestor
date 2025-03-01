@@ -1,9 +1,16 @@
-
 import { useState, useEffect } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
 import Navbar from "../components/Navbar";
-import { ArrowUp, ArrowDown, BarChart3, TrendingUp, AlertTriangle, Briefcase } from "lucide-react";
 import { useToast } from "../hooks/use-toast";
+import MarketOverview from "../components/MarketOverview";
+import NewsSentiment from "../components/NewsSentiment";
+import { ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
+import { Button } from "../components/ui/button";
 
 // Sample data for different timeframes
 const generatePortfolioData = (timeframe: string) => {
@@ -162,206 +169,11 @@ const Dashboard = () => {
 
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
-          {/* Dashboard header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-            <p className="text-foreground/70">
-              Welcome back! Here's an overview of your investment portfolio.
-            </p>
-          </div>
-
-          {/* Portfolio summary */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            {[
-              {
-                title: "Portfolio Value",
-                value: "$26,483.79",
-                change: "+$1,245.32 (4.9%)",
-                positive: true,
-                icon: <Briefcase className="h-6 w-6 text-primary" />,
-              },
-              {
-                title: "Today's Return",
-                value: "$324.17",
-                change: "+1.2%",
-                positive: true,
-                icon: <TrendingUp className="h-6 w-6 text-green-500" />,
-              },
-              {
-                title: "Risk Level",
-                value: "Moderate",
-                change: "Balanced exposure",
-                positive: null,
-                icon: <AlertTriangle className="h-6 w-6 text-yellow-500" />,
-              },
-              {
-                title: "AI Confidence",
-                value: "High",
-                change: "Based on current data",
-                positive: null,
-                icon: <BarChart3 className="h-6 w-6 text-primary" />,
-              },
-            ].map((item, index) => (
-              <div key={index} className="glass-morphism rounded-2xl p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <p className="text-foreground/70 text-sm mb-1">{item.title}</p>
-                    <h3 className="text-2xl font-semibold">{item.value}</h3>
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    {item.icon}
-                  </div>
-                </div>
-                {item.positive !== null && (
-                  <div className={`text-sm ${item.positive ? "text-green-600" : "text-red-600"}`}>
-                    <span className="flex items-center">
-                      {item.positive ? <ArrowUp className="h-3 w-3 mr-1" /> : <ArrowDown className="h-3 w-3 mr-1" />}
-                      {item.change}
-                    </span>
-                  </div>
-                )}
-                {item.positive === null && (
-                  <div className="text-sm text-foreground/70">{item.change}</div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Charts section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            {/* Portfolio performance chart */}
-            <div className="glass-morphism rounded-2xl p-6 lg:col-span-2">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-semibold">Portfolio Performance</h3>
-                <div className="flex flex-wrap gap-1 sm:space-x-2">
-                  <button
-                    className={`px-3 py-1 text-sm rounded-md ${portfolioTimeframe === "1Y" ? "bg-primary/10 text-primary" : "text-foreground/60 hover:text-foreground/80 hover:bg-secondary/50"}`}
-                    onClick={() => handleTimeframeChange("1Y")}
-                  >
-                    1Y
-                  </button>
-                  <button
-                    className={`px-3 py-1 text-sm rounded-md ${portfolioTimeframe === "YTD" ? "bg-primary/10 text-primary" : "text-foreground/60 hover:text-foreground/80 hover:bg-secondary/50"}`}
-                    onClick={() => handleTimeframeChange("YTD")}
-                  >
-                    YTD
-                  </button>
-                  <button
-                    className={`px-3 py-1 text-sm rounded-md ${portfolioTimeframe === "6M" ? "bg-primary/10 text-primary" : "text-foreground/60 hover:text-foreground/80 hover:bg-secondary/50"}`}
-                    onClick={() => handleTimeframeChange("6M")}
-                  >
-                    6M
-                  </button>
-                  <button
-                    className={`px-3 py-1 text-sm rounded-md ${portfolioTimeframe === "3M" ? "bg-primary/10 text-primary" : "text-foreground/60 hover:text-foreground/80 hover:bg-secondary/50"}`}
-                    onClick={() => handleTimeframeChange("3M")}
-                  >
-                    3M
-                  </button>
-                  <button
-                    className={`px-3 py-1 text-sm rounded-md ${portfolioTimeframe === "1M" ? "bg-primary/10 text-primary" : "text-foreground/60 hover:text-foreground/80 hover:bg-secondary/50"}`}
-                    onClick={() => handleTimeframeChange("1M")}
-                  >
-                    1M
-                  </button>
-                  <button
-                    className={`px-3 py-1 text-sm rounded-md ${portfolioTimeframe === "5Y" ? "bg-primary/10 text-primary" : "text-foreground/60 hover:text-foreground/80 hover:bg-secondary/50"}`}
-                    onClick={() => handleTimeframeChange("5Y")}
-                  >
-                    5Y
-                  </button>
-                </div>
-              </div>
-              <div className="h-[300px]">
-                {isLoading ? (
-                  <div className="h-full flex items-center justify-center">
-                    <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                  </div>
-                ) : (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={portfolioData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis
-                        dataKey="name"
-                        tick={{ fontSize: 12 }}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <YAxis
-                        tick={{ fontSize: 12 }}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(tick) => {
-                          return `$${(tick / 1000).toFixed(0)}k`;
-                        }}
-                        domain={['auto', 'auto']}
-                      />
-                      <Tooltip
-                        formatter={(value: any) => [`$${value.toLocaleString()}`, 'Portfolio Value']}
-                        contentStyle={{
-                          borderRadius: '8px',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                          border: 'none'
-                        }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="value"
-                        stroke="hsl(var(--primary))"
-                        strokeWidth={2}
-                        dot={portfolioTimeframe === "5Y" ? false : { strokeWidth: 2, r: 4 }}
-                        activeDot={{ r: 6 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                )}
-              </div>
-            </div>
-
-            {/* Asset allocation chart */}
-            <div className="glass-morphism rounded-2xl p-6">
-              <h3 className="text-xl font-semibold mb-6">Asset Allocation</h3>
-              <div className="h-[300px]">
-                {isLoading ? (
-                  <div className="h-full flex items-center justify-center">
-                    <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                  </div>
-                ) : (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={allocationData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={90}
-                        paddingAngle={2}
-                        dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                        labelLine={false}
-                      >
-                        {allocationData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        formatter={(value: any) => [`${value}%`, 'Allocation']}
-                        contentStyle={{
-                          borderRadius: '8px',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                          border: 'none'
-                        }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Watchlist */}
+          
+          <MarketOverview />
+          <NewsSentiment />
           <div className="glass-morphism rounded-2xl p-6">
-            <h3 className="text-xl font-semibold mb-6">Watchlist</h3>
+            <h3 className="text-xl font-semibold mb-6">Hot Stocks</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
