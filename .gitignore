@@ -1,7 +1,7 @@
 # Backend .gitignore
 back-end/__pycache__/
 back-end/node_modules/
-back-end/.env*
+back-end/.env
 back-end/.venv/
 back-end/*.log
 back-end/config/settings_local.py  # If applicable
@@ -11,7 +11,7 @@ front-end/node_modules/
 front-end/.next/
 front-end/dist/
 front-end/build/
-front-end/.env*
+front-end/.env
 
 # Machine Learning Models .gitignore
 ml-models/__pycache__/
