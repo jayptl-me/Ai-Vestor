@@ -14,7 +14,8 @@ import LearnYard from "./pages/LearnYard";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ThemeProvider defaultTheme="system" storageKey="ai-investor-theme">
+
+  <><ThemeProvider defaultTheme="system" storageKey="ai-investor-theme">
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
@@ -31,7 +32,8 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-  </ThemeProvider>
+  </ThemeProvider></>
+
 );
 
 export default App;
