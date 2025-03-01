@@ -31,17 +31,17 @@ Assess the overall health of your investment portfolio and receive AI-driven opt
 ## 🚀 Tech Stack
 
 ### Backend
-- **Framework:** FastAPI / Django / Flask
-- **Database:** PostgreSQL / MongoDB
-- **Authentication:** JWT / OAuth
+- **Framework:** FastAPI
+- **Database:**  MongoDB
+- **Authentication**
 
 ### Frontend
-- **Framework:** React.js / Next.js / TypeScript
+- **Framework:** React / TypeScript
 - **Styling:** Tailwind CSS
 
 ### Machine Learning
-- **Libraries:** TensorFlow, PyTorch, Scikit-learn, NLTK, OpenAI API
-- **Data Sources:** Yahoo Finance API, Alpha Vantage, News APIs
+- **Libraries:** TensorFlow, Scikit-learn, NLTK
+- **Data Sources:** Yahoo Finance API
 
 ---
 
