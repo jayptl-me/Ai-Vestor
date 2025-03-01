@@ -6,6 +6,8 @@ import courseRoutes from "./controllers/courseController";
 import lessonRoutes from "./controllers/lessonController";
 import { errorHandler } from "./utils/errorHandler";
 import langchainRoutes from "./controllers/langchainController";
+import progressRoutes from "./controllers/progressController";
+import authRoutes from "./controllers/authController";
 import marketRoutes from "./controllers/hotdataController";
 
 const app = new Hono();
@@ -19,6 +21,8 @@ app.use("*", errorHandler());
 app.route("/api/courses", courseRoutes);
 app.route("/api/lessons", lessonRoutes);
 app.route("/api/analysis", langchainRoutes);
+app.route("/api/progress", progressRoutes)
+app.route("/api/auth", authRoutes)
 app.route("/api/hotdata", marketRoutes);
 
 // Root route

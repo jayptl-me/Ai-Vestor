@@ -1,11 +1,8 @@
-// services/lessonService.ts
 import type { Lesson } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 import prisma from '../utils/prismaClient';
 
-
 export class LessonService {
-    // Get all lessons with filtering and sorting
     async getLessons(
         courseId?: string,
         sortBy: 'title' | 'createdAt' | 'updatedAt' = 'createdAt',
@@ -13,92 +10,62 @@ export class LessonService {
         page: number = 1,
         limit: number = 10
     ): Promise<{ lessons: Lesson[]; total: number }> {
-        // Build filter conditions
-        const where: Prisma.LessonWhereInput = {};
-
-        // Filter by courseId if provided
-        if (courseId) {
-            where.courseId = courseId;
-        }
-
-        // Count total matching lessons
+        const where: Prisma.LessonWhereInput = { courseId };
         const total = await prisma.lesson.count({ where });
+        const orderBy: any = { [sortBy]: order };
 
-        // Build sort options
-        const orderBy: any = {};
-        orderBy[sortBy] = order;
-
-        // Execute query with pagination
         const lessons = await prisma.lesson.findMany({
             where,
             orderBy,
             skip: (page - 1) * limit,
             take: limit,
-            include: {
-                course: {
-                    select: {
-                        id: true,
-                        title: true
-                    }
-                }
-            }
+            include: { course: { select: { id: true, title: true } } },
         });
 
         return { lessons, total };
     }
 
-    // Get a lesson by ID
     async getLessonById(id: string): Promise<Lesson | null> {
         return prisma.lesson.findUnique({
             where: { id },
-            include: {
-                course: {
-                    select: {
-                        id: true,
-                        title: true
-                    }
-                }
-            }
+            include: { course: { select: { id: true, title: true } } },
         });
     }
 
-    // Create a new lesson
-    async createLesson(data: Prisma.LessonCreateInput): Promise<Lesson> {
-        return prisma.lesson.create({
-            data
-        });
+    async createLesson(data: any) {
+        if (data.type === 'VIDEO' && !data.videoUrl) {
+            throw new Error('Video URL is required for video lessons');
+        }
+        if (data.type === 'QUIZ' && !data.quizQuestions) {
+            throw new Error('Quiz questions are required for quiz lessons');
+        }
+        return prisma.lesson.create({ data });
     }
 
-    // Update a lesson
-    async updateLesson(id: string, data: Prisma.LessonUpdateInput): Promise<Lesson | null> {
+    async updateLesson(id: string, data: any): Promise<Lesson | null> {
+        if (data.type === 'VIDEO' && data.videoUrl === undefined) {
+            throw new Error('Video URL is required for video lessons');
+        }
+        if (data.type === 'QUIZ' && data.quizQuestions === undefined) {
+            throw new Error('Quiz questions are required for quiz lessons');
+        }
         try {
-            return await prisma.lesson.update({
-                where: { id },
-                data
-            });
+            return await prisma.lesson.update({ where: { id }, data });
         } catch (error) {
-            if (error instanceof Prisma.PrismaClientKnownRequestError) {
-                if (error.code === 'P2025') {
-                    return null; // Lesson not found
-                }
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+                return null;
             }
             throw error;
         }
     }
 
-    // Delete a lesson
     async deleteLesson(id: string): Promise<boolean> {
         try {
-            await prisma.lesson.delete({
-                where: { id }
-            });
-
+            await prisma.lesson.delete({ where: { id } });
             return true;
         } catch (error) {
-            if (error instanceof Prisma.PrismaClientKnownRequestError) {
-                if (error.code === 'P2025') {
-                    return false; // Lesson not found
-                }
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+                return false;
             }
             throw error;
         }
