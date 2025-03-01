@@ -6,6 +6,7 @@ import courseRoutes from "./controllers/courseController";
 import lessonRoutes from "./controllers/lessonController";
 import { errorHandler } from "./utils/errorHandler";
 import langchainRoutes from "./controllers/langchainController";
+import marketRoutes from "./controllers/hotdataController";
 
 const app = new Hono();
 
@@ -18,6 +19,7 @@ app.use("*", errorHandler());
 app.route("/api/courses", courseRoutes);
 app.route("/api/lessons", lessonRoutes);
 app.route("/api/analysis", langchainRoutes);
+app.route("/api/hotdata", marketRoutes);
 
 // Root route
 app.get("/", (c) => {
