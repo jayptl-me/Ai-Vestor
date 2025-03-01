@@ -16,12 +16,8 @@ const Navbar = () => {
     { name: "Dashboard", path: "/dashboard" },
     { name: "Stock Prediction", path: "/stock-prediction" },
     {
-      name: "Analysis Tools",
-      path: "#",
-      subLinks: [
-        { name: "News & Sentiment", path: "/news-sentiment" },
-        { name: "Portfolio Health", path: "/portfolio-health" },
-      ],
+      name: "Learn Yard",
+      path: "/learn-yard",
     },
   ];
 
