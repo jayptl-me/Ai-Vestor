@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ReferenceLine } from "recharts";
 import { ChevronDown, Search, Info, Clock, PlusCircle, TrendingUp, TrendingDown, AlertCircle } from "lucide-react";
@@ -6,136 +5,135 @@ import Navbar from "../components/Navbar";
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
 
-// Sample stock data
-const generateStockData = (ticker: string) => {
-  const data = [];
-  const now = new Date();
-  let baseValue = ticker === "AAPL" ? 187 :
-    ticker === "MSFT" ? 403 :
-      ticker === "GOOGL" ? 147 :
-        ticker === "AMZN" ? 174 : 175;
+interface PredictionResponse {
+  ticker: string;
+  timeframe: string;
+  interval: string;
+  lstm_predictions: number[];
+  predicted_price_range: string;
+  current_price: number;
+  projected_change: string;
+  quantitative_analysis: string;
+}
 
-  for (let i = 365; i >= 0; i--) {
-    const date = new Date(now);
-    date.setDate(now.getDate() - i);
-
-    if (i > 30) {
-      // Historical data: Create a pattern with some randomness
-      const day = i / 30;
-      const volatility = ticker === "TSLA" ? 0.04 : 0.015; // Tesla more volatile
-      const trend = ticker === "MSFT" || ticker === "GOOGL" ? 0.0003 : 0.0001; // Microsoft and Google with stronger uptrend
-
-      // Create a slightly randomized sine wave pattern with an uptrend
-      baseValue = baseValue * (1 + Math.sin(day) * volatility * (Math.random() * 0.5 + 0.8)) + baseValue * trend;
-
-      data.push({
-        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        value: parseFloat(baseValue.toFixed(2)),
-        prediction: null
-      });
-    } else {
-      // Recent data: Create a pattern with some randomness
-      const volatility = ticker === "TSLA" ? 0.03 : 0.01;
-      const trend = ticker === "AMZN" ? -0.0002 : 0.0002; // Amazon with a slight downtrend
-
-      baseValue = baseValue * (1 + (Math.random() * 2 - 1) * volatility) + baseValue * trend;
-
-      data.push({
-        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        value: parseFloat(baseValue.toFixed(2)),
-        prediction: null
-      });
-    }
-  }
-
-  // Add prediction for next 30 days
-  let lastValue = data[data.length - 1].value;
-  const uptrend = ticker === "AAPL" || ticker === "MSFT" || ticker === "GOOGL";
-  const trendFactor = uptrend ? 1.00015 : 0.99985;
-  const volatility = ticker === "TSLA" ? 0.02 : 0.008;
-
-  for (let i = 1; i <= 30; i++) {
-    const date = new Date(now);
-    date.setDate(now.getDate() + i);
-
-    lastValue = lastValue * trendFactor * (1 + (Math.random() * 2 - 1) * volatility);
-
-    data.push({
-      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      value: null,
-      prediction: parseFloat(lastValue.toFixed(2))
-    });
-  }
-
-  return data;
-};
-
-// Available stocks
 const availableStocks = [
   { ticker: "AAPL", name: "Apple Inc." },
   { ticker: "MSFT", name: "Microsoft Corp." },
   { ticker: "GOOGL", name: "Alphabet Inc." },
   { ticker: "AMZN", name: "Amazon.com Inc." },
   { ticker: "TSLA", name: "Tesla Inc." },
+  { ticker: "BTC-USD", name: "Bitcoin" }
+];
+
+const timeframeOptions = [
+  { value: "1 minutes", label: "1 Min" },
+  { value: "5 minutes", label: "5 Min" },
+  { value: "1 hour", label: "1 Hour" },
+  { value: "1 day", label: "1 Day" },
+  { value: "5 days", label: "5 Days" }
+];
+
+const intervalOptions = [
+  { value: "1m", label: "1 Min" },
+  { value: "5m", label: "5 Min" },
+  { value: "1d", label: "1 Day" }
 ];
 
 const StockPrediction = () => {
   const [selectedStock, setSelectedStock] = useState(availableStocks[0]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [stockData, setStockData] = useState<any[]>([]);
+  const [predictionData, setPredictionData] = useState<PredictionResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [timeframe, setTimeframe] = useState("1Y");
+  const [timeframe, setTimeframe] = useState("5m"); // Set to match your API response
+  const [interval, setInterval] = useState("1m");   // Set to match your API response
   const [confidence, setConfidence] = useState(85);
   const { toast } = useToast();
 
-  // Load stock data when selected stock changes
   useEffect(() => {
     setIsLoading(true);
 
-    // Simulate API call delay
-    const timer = setTimeout(() => {
-      setStockData(generateStockData(selectedStock.ticker));
-      setIsLoading(false);
-    }, 1000);
+    const fetchPredictionData = async () => {
+      try {
+        const baseUrl = "http://141.148.216.88:8000"; // Replace with your actual base URL
+        const url = `${baseUrl}/predict/${selectedStock.ticker}?timeframe=${encodeURIComponent(timeframe)}&interval=${interval}`;
 
-    return () => clearTimeout(timer);
-  }, [selectedStock]);
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-  // Filter data based on timeframe
-  const getFilteredData = () => {
-    if (!stockData.length) return [];
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
-    const cutoffIndex = stockData.findIndex(item => item.prediction !== null) - 1;
+        const data = await response.json();
+        setPredictionData(data);
+        const chartData = generateChartData(data);
+        setStockData(chartData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching prediction data:", error);
+        setIsLoading(false);
+        toast({
+          title: "Error",
+          description: "Failed to fetch prediction data. Using mock data instead.",
+          duration: 3000,
+        });
 
-    switch (timeframe) {
-      case "1M":
-        return stockData.slice(cutoffIndex - 30);
-      case "3M":
-        return stockData.slice(cutoffIndex - 90);
-      case "6M":
-        return stockData.slice(cutoffIndex - 180);
-      case "1Y":
-      default:
-        return stockData;
-    }
+        // Fallback mock data
+        const mockResponse: PredictionResponse = {
+          ticker: selectedStock.ticker,
+          timeframe: timeframe,
+          interval: interval,
+          lstm_predictions: [241.82846069335938, 240.99771118164062, 239.925048828125, 239.5954132080078, 239.3077850341797],
+          predicted_price_range: "$239.31 - $241.83",
+          current_price: 241.83999633789062,
+          projected_change: "-1.05%",
+          quantitative_analysis: "LSTM model projects a fall to approximately $239.31"
+        };
+        setPredictionData(mockResponse);
+        const chartData = generateChartData(mockResponse);
+        setStockData(chartData);
+        setIsLoading(false);
+      }
+    };
+
+    fetchPredictionData();
+  }, [selectedStock, timeframe, interval, toast]);
+
+  const generateChartData = (data: PredictionResponse) => {
+    if (!data) return [];
+
+    const chartData = [];
+    const now = new Date();
+
+    // Add current price as the starting point
+    chartData.push({
+      time: "Now",
+      value: data.current_price,
+      prediction: null
+    });
+
+    // Add prediction points
+    data.lstm_predictions.forEach((prediction, index) => {
+      const minutesAhead = (index + 1);
+      chartData.push({
+        time: `+${minutesAhead}m`,
+        value: null,
+        prediction: prediction
+      });
+    });
+
+    return chartData;
   };
 
-  const filteredData = getFilteredData();
+  const filteredData = stockData;
 
-  // Calculate current price and prediction
-  const currentPrice = stockData.length ?
-    stockData.find(item => item.prediction === null && item.value !== null)?.value?.toFixed(2) : null;
-
-  const latestPrediction = stockData.length ?
-    stockData.filter(item => item.prediction !== null)[0]?.prediction?.toFixed(2) : null;
-
-  const finalPrediction = stockData.length ?
-    stockData[stockData.length - 1]?.prediction?.toFixed(2) : null;
-
-  const predictionChange = currentPrice && finalPrediction ?
-    ((parseFloat(finalPrediction) - parseFloat(currentPrice)) / parseFloat(currentPrice) * 100).toFixed(2) : null;
-
-  const isPredictionPositive = predictionChange ? parseFloat(predictionChange) > 0 : null;
+  const predictionChange = predictionData?.projected_change || null;
+  const isPredictionPositive = predictionChange ? predictionChange.includes('+') : null;
 
   const handleAddToWatchlist = () => {
     toast({
@@ -145,13 +143,16 @@ const StockPrediction = () => {
     });
   };
 
+  const getTimeframeDisplay = (tf: string) => {
+    const option = timeframeOptions.find(o => o.value === tf);
+    return option ? option.label : tf;
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
-          {/* Page Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Stock Price Prediction</h1>
             <p className="text-foreground/70">
@@ -159,14 +160,10 @@ const StockPrediction = () => {
             </p>
           </div>
 
-          {/* Stock selector and prediction panel */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
-            {/* Left side - controls */}
             <div className="lg:col-span-1">
               <div className="glass-morphism rounded-2xl p-6 mb-6">
                 <h3 className="text-lg font-semibold mb-4">Select Stock</h3>
-
-                {/* Stock dropdown */}
                 <div className="relative mb-6">
                   <button
                     className="w-full flex items-center justify-between bg-white dark:bg-background border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary/20"
@@ -183,7 +180,6 @@ const StockPrediction = () => {
                     </div>
                     <ChevronDown className="h-5 w-5 text-foreground/60" />
                   </button>
-
                   {dropdownOpen && (
                     <div className="absolute z-10 mt-1 w-full bg-white dark:bg-background rounded-lg shadow-lg border border-border overflow-hidden">
                       <div className="p-2">
@@ -220,26 +216,38 @@ const StockPrediction = () => {
                   )}
                 </div>
 
-                {/* Timeframe selector */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-medium mb-2">Timeframe</h4>
-                  <div className="grid grid-cols-4 gap-2">
-                    {["1M", "3M", "6M", "1Y"].map((period) => (
+                  <h4 className="text-sm font-medium mb-2">Prediction Timeframe</h4>
+                  <div className="grid grid-cols-3 gap-2 mb-4">
+                    {timeframeOptions.map((option) => (
                       <button
-                        key={period}
-                        className={`py-2 px-3 text-sm rounded-md transition-colors ${timeframe === period
-                            ? "bg-primary text-white"
-                            : "bg-secondary/50 text-foreground/70 hover:bg-secondary"
+                        key={option.value}
+                        className={`py-2 px-3 text-sm rounded-md transition-colors ${timeframe === option.value
+                          ? "bg-primary text-white"
+                          : "bg-secondary/50 text-foreground/70 hover:bg-secondary"
                           }`}
-                        onClick={() => setTimeframe(period)}
+                        onClick={() => setTimeframe(option.value)}
                       >
-                        {period}
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                  <h4 className="text-sm font-medium mb-2">Data Interval</h4>
+                  <div className="grid grid-cols-3 gap-2">
+                    {intervalOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        className={`py-2 px-3 text-sm rounded-md transition-colors ${interval === option.value
+                          ? "bg-primary text-white"
+                          : "bg-secondary/50 text-foreground/70 hover:bg-secondary"
+                          }`}
+                        onClick={() => setInterval(option.value)}
+                      >
+                        {option.label}
                       </button>
                     ))}
                   </div>
                 </div>
-
-                {/* Actions */}
                 <div className="space-y-3">
                   <Button
                     variant="outline"
@@ -252,82 +260,33 @@ const StockPrediction = () => {
                 </div>
               </div>
 
-              {/* AI Confidence */}
-              <div className="glass-morphism rounded-2xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">AI Confidence</h3>
-                  <div className="flex items-center bg-green-100 text-green-800 text-xs font-medium rounded-full px-2.5 py-1">
-                    High
-                  </div>
-                </div>
 
-                <div className="mb-3">
-                  <div className="flex justify-between mb-1 text-sm">
-                    <span>Confidence Score</span>
-                    <span className="font-medium">{confidence}%</span>
-                  </div>
-                  <div className="w-full bg-secondary/80 rounded-full h-2">
-                    <div
-                      className="bg-green-500 h-2 rounded-full"
-                      style={{ width: `${confidence}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="space-y-4 mt-6">
-                  <div className="flex items-start">
-                    <Clock className="h-4 w-4 mt-0.5 mr-3 text-foreground/60" />
-                    <div className="text-sm">
-                      <p className="font-medium">Recent data analyzed</p>
-                      <p className="text-foreground/60 text-xs">Last updated 2 hours ago</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start">
-                    <AlertCircle className="h-4 w-4 mt-0.5 mr-3 text-foreground/60" />
-                    <div className="text-sm">
-                      <p className="font-medium">Market volatility: Low</p>
-                      <p className="text-foreground/60 text-xs">Stable conditions for prediction</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start">
-                    <Info className="h-4 w-4 mt-0.5 mr-3 text-foreground/60" />
-                    <div className="text-sm">
-                      <p className="font-medium">Prediction model</p>
-                      <p className="text-foreground/60 text-xs">Advanced neural network with technical and fundamental analysis</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
-            {/* Right side - chart and predictions */}
             <div className="lg:col-span-3">
-              {/* Stock price and prediction summary */}
               <div className="glass-morphism rounded-2xl p-6 mb-8">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-2xl font-bold">{selectedStock.ticker}: {selectedStock.name}</h2>
                   {isPredictionPositive !== null && (
-                    <div className={`flex items-center ${isPredictionPositive ? "text-green-600" : "text-red-600"
-                      }`}>
+                    <div className={`flex items-center ${isPredictionPositive ? "text-green-600" : "text-red-600"}`}>
                       {isPredictionPositive ? (
                         <TrendingUp className="h-5 w-5 mr-2" />
                       ) : (
                         <TrendingDown className="h-5 w-5 mr-2" />
                       )}
-                      <span className="font-bold">{predictionChange}%</span>
-                      <span className="text-sm text-foreground/60 ml-1">30-day forecast</span>
+                      <span className="font-bold">{predictionChange}</span>
+                      <span className="text-sm text-foreground/60 ml-1">{getTimeframeDisplay(timeframe)} forecast</span>
                     </div>
                   )}
                 </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <div className="text-foreground/60 text-sm mb-1">Current Price</div>
-                    <div className="text-3xl font-bold">${currentPrice || "—"}</div>
+                    <div className="text-3xl font-bold">${predictionData?.current_price.toFixed(2) || "—"}</div>
                   </div>
                   <div>
-                    <div className="text-foreground/60 text-sm mb-1">30-Day Prediction</div>
-                    <div className="text-3xl font-bold">${finalPrediction || "—"}</div>
+                    <div className="text-foreground/60 text-sm mb-1">Predicted Range</div>
+                    <div className="text-3xl font-bold">{predictionData?.predicted_price_range || "—"}</div>
                   </div>
                   <div>
                     <div className="text-foreground/60 text-sm mb-1">Confidence Level</div>
@@ -339,15 +298,13 @@ const StockPrediction = () => {
                 </div>
               </div>
 
-              {/* Price chart */}
               <div className="glass-morphism rounded-2xl p-6">
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold mb-2">Price Prediction Chart</h3>
                   <p className="text-sm text-foreground/70">
-                    Historical price data with AI-generated 30-day price prediction
+                    Current price with AI-generated {getTimeframeDisplay(timeframe)} price prediction using {intervalOptions.find(i => i.value === interval)?.label} intervals
                   </p>
                 </div>
-
                 <div className="h-[400px]">
                   {isLoading ? (
                     <div className="h-full flex items-center justify-center">
@@ -361,7 +318,7 @@ const StockPrediction = () => {
                       >
                         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                         <XAxis
-                          dataKey="date"
+                          dataKey="time"
                           tick={{ fontSize: 12 }}
                           tickLine={false}
                           axisLine={false}
@@ -372,9 +329,7 @@ const StockPrediction = () => {
                           tick={{ fontSize: 12 }}
                           tickLine={false}
                           axisLine={false}
-                          tickFormatter={(tick) => {
-                            return `$${tick.toFixed(0)}`;
-                          }}
+                          tickFormatter={(tick) => `$${tick.toFixed(0)}`}
                         />
                         <Tooltip
                           formatter={(value: any) => value ? [`$${value.toFixed(2)}`, 'Price'] : ['-', 'Price']}
@@ -383,48 +338,41 @@ const StockPrediction = () => {
                             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
                             border: 'none'
                           }}
-                          labelFormatter={(label) => `Date: ${label}`}
+                          labelFormatter={(label) => `Time: ${label}`}
                         />
                         <Legend />
                         <ReferenceLine
-                          x={filteredData.findIndex(item => item.prediction !== null)}
+                          x={0}
                           stroke="#888"
                           strokeDasharray="3 3"
-                          label={{ value: 'Today', position: 'insideTopRight', fill: '#888', fontSize: 12 }}
+                          label={{ value: 'Current', position: 'insideTopRight', fill: '#888', fontSize: 12 }}
                         />
                         <Line
-                          name="Historical Price"
+                          name="Current Price"
                           type="monotone"
                           dataKey="value"
                           stroke="hsl(var(--primary))"
                           strokeWidth={2}
-                          dot={false}
-                          activeDot={{ r: 6 }}
+                          dot={{ r: 6 }}
+                          activeDot={{ r: 8 }}
                         />
                         <Line
-                          name="AI Prediction"
+                          name="LSTM Prediction"
                           type="monotone"
                           dataKey="prediction"
                           stroke="#10b981"
                           strokeWidth={2}
-                          strokeDasharray="5 5"
-                          dot={false}
-                          activeDot={{ r: 6 }}
+                          dot={{ r: 6 }}
+                          activeDot={{ r: 8 }}
                         />
                       </LineChart>
                     </ResponsiveContainer>
                   )}
                 </div>
-
                 <div className="mt-6 p-4 bg-secondary/30 rounded-lg text-sm">
                   <p className="flex items-start">
                     <Info className="h-4 w-4 mt-0.5 mr-2 text-foreground/70" />
-                    <span>
-                      Our AI model predicts that {selectedStock.ticker} will
-                      {isPredictionPositive ? " increase " : " decrease "}
-                      by {predictionChange ? Math.abs(parseFloat(predictionChange)).toFixed(2) : "—"}%
-                      over the next 30 days. This prediction is based on historical data, market trends, and sentiment analysis.
-                    </span>
+                    <span>{predictionData?.quantitative_analysis || "No analysis available"}</span>
                   </p>
                 </div>
               </div>
