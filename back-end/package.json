@@ -1,0 +1,20 @@
+{
+    "name": "ai-vestor-backend",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "node dist/index.js",
+        "build": "tsc",
+        "dev": "ts-node src/index.ts"
+    },
+    "dependencies": {
+        "hono": "^3.0.0",
+        "dotenv": "^16.0.3",
+        "cors": "^2.8.5",
+        "helmet": "^7.0.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0",
+        "ts-node": "^10.9.1",
+        "@types/node": "^18.0.0"
+    }
+}

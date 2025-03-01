@@ -1,0 +1,39 @@
+# Backend .gitignore
+back-end/__pycache__/
+back-end/node_modules/
+back-end/.env*
+back-end/.venv/
+back-end/*.log
+back-end/config/settings_local.py  # If applicable
+
+# Frontend .gitignore
+front-end/node_modules/
+front-end/.next/
+front-end/dist/
+front-end/build/
+front-end/.env*
+
+# Machine Learning Models .gitignore
+ml-models/__pycache__/
+ml-models/venv/
+ml-models/models/
+ml-models/*.log
+ml-models/*.csv
+ml-models/*.h5
+ml-models/*.pth
+ml-models/*.pkl
+ml-models/*.joblib
+ml-models/.env*
+
+# Product Design Docs
+product-design-doc/
+
+# General Ignore Rules
+.DS_Store
+*.log
+*.swp
+*.swo
+.idea/
+.vscode/
+*.bak
+*.tmp
