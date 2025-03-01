@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
+import { ThemeToggle } from "./ThemeToggle";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -41,7 +42,9 @@ const Navbar = () => {
 
   const toggleSubMenu = (name: string) => {
     setOpenSubMenus((prev) =>
-      prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
+      prev.includes(name)
+        ? prev.filter((item) => item !== name)
+        : [...prev, name]
     );
   };
 
@@ -88,7 +91,9 @@ const Navbar = () => {
                       {link.name}
                       <span
                         className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary transform origin-left transition-transform duration-300 ${
-                          location.pathname === link.path ? "scale-x-100" : "scale-x-0"
+                          location.pathname === link.path
+                            ? "scale-x-100"
+                            : "scale-x-0"
                         } group-hover:scale-x-100`}
                       ></span>
                     </Link>
@@ -117,6 +122,7 @@ const Navbar = () => {
 
             {/* Auth Buttons */}
             <div className="hidden md:flex items-center space-x-4">
+              <ThemeToggle />
               <Button
                 variant="ghost"
                 size="sm"
@@ -133,16 +139,16 @@ const Navbar = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <button
-              className="md:hidden"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-6 w-6 text-foreground" />
-              ) : (
-                <Menu className="h-6 w-6 text-foreground" />
-              )}
-            </button>
+            <div className="md:hidden flex items-center space-x-2">
+              <ThemeToggle />
+              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                {isMobileMenuOpen ? (
+                  <X className="h-6 w-6 text-foreground" />
+                ) : (
+                  <Menu className="h-6 w-6 text-foreground" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
