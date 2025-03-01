@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -18,7 +18,6 @@ const Navbar = () => {
       name: "Analysis Tools",
       path: "#",
       subLinks: [
-        { name: "Risk Analyzer", path: "/risk-analyzer" },
         { name: "News & Sentiment", path: "/news-sentiment" },
         { name: "Portfolio Health", path: "/portfolio-health" },
       ],
@@ -49,18 +48,16 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? "py-2" : "py-6"
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? "py-2" : "py-6"
+        }`}
     >
       <div className="container mx-auto px-4">
         {/* Reverted Desktop Navbar: Floating Glassmorphic Design */}
         <div
-          className={`rounded-xl backdrop-blur-xl transition-all duration-300 px-4 py-3 ${
-            isScrolled
-              ? "bg-white/80 dark:bg-black/80 shadow-lg"
-              : "bg-white/50 dark:bg-black/50"
-          }`}
+          className={`rounded-xl backdrop-blur-xl transition-all duration-300 px-4 py-3 ${isScrolled
+            ? "bg-white/80 dark:bg-black/80 shadow-lg"
+            : "bg-white/50 dark:bg-black/50"
+            }`}
         >
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -79,17 +76,15 @@ const Navbar = () => {
                   {!link.subLinks ? (
                     <Link
                       to={link.path}
-                      className={`text-sm font-medium transition-colors hover:text-primary ${
-                        location.pathname === link.path
-                          ? "text-primary"
-                          : "text-foreground/80"
-                      }`}
+                      className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === link.path
+                        ? "text-primary"
+                        : "text-foreground/80"
+                        }`}
                     >
                       {link.name}
                       <span
-                        className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary transform origin-left transition-transform duration-300 ${
-                          location.pathname === link.path ? "scale-x-100" : "scale-x-0"
-                        } group-hover:scale-x-100`}
+                        className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary transform origin-left transition-transform duration-300 ${location.pathname === link.path ? "scale-x-100" : "scale-x-0"
+                          } group-hover:scale-x-100`}
                       ></span>
                     </Link>
                   ) : (
@@ -149,9 +144,8 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed inset-0 top-[73px] backdrop-blur-xl bg-white/90 dark:bg-background/95 z-40 transition-transform duration-300 ease-in-out ${
-          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`md:hidden fixed inset-0 top-[73px] backdrop-blur-xl bg-white/90 dark:bg-background/95 z-40 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="container mx-auto px-4 py-6 flex flex-col h-full">
           <nav className="flex flex-col space-y-6">
@@ -160,11 +154,10 @@ const Navbar = () => {
                 {!link.subLinks ? (
                   <Link
                     to={link.path}
-                    className={`text-base font-medium py-2 ${
-                      location.pathname === link.path
-                        ? "text-primary font-semibold"
-                        : "text-foreground"
-                    }`}
+                    className={`text-base font-medium py-2 ${location.pathname === link.path
+                      ? "text-primary font-semibold"
+                      : "text-foreground"
+                      }`}
                   >
                     {link.name}
                   </Link>
@@ -176,17 +169,15 @@ const Navbar = () => {
                     >
                       <span className="text-base font-medium">{link.name}</span>
                       <ChevronDown
-                        className={`h-4 w-4 transition-transform duration-200 ${
-                          isSubMenuOpen(link.name) ? "rotate-180" : ""
-                        }`}
+                        className={`h-4 w-4 transition-transform duration-200 ${isSubMenuOpen(link.name) ? "rotate-180" : ""
+                          }`}
                       />
                     </button>
                     <div
-                      className={`pl-4 border-l border-border ml-2 mt-2 space-y-2 overflow-hidden transition-all duration-300 ${
-                        isSubMenuOpen(link.name)
-                          ? "max-h-40 opacity-100"
-                          : "max-h-0 opacity-0"
-                      }`}
+                      className={`pl-4 border-l border-border ml-2 mt-2 space-y-2 overflow-hidden transition-all duration-300 ${isSubMenuOpen(link.name)
+                        ? "max-h-40 opacity-100"
+                        : "max-h-0 opacity-0"
+                        }`}
                     >
                       {link.subLinks.map((subLink) => (
                         <Link

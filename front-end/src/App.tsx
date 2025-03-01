@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import StockPrediction from "./pages/StockPrediction";
 import NotFound from "./pages/NotFound";
+import NewsSentiment from "./pages/NewsSentiment";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/stock-prediction" element={<StockPrediction />} />
+          <Route path="/news-sentiment" element={<NewsSentiment />} />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
