@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);

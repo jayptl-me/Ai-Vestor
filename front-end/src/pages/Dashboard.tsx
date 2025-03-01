@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import { useToast } from "../hooks/use-toast";
 import MarketOverview from "../components/MarketOverview";
 import NewsSentiment from "../components/NewsSentiment";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Globe } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -115,16 +115,6 @@ const generatePortfolioData = (timeframe: string) => {
   return valuesByTimeframe[timeframe] || valuesByTimeframe["1Y"];
 };
 
-const allocationData = [
-  { name: "Technology", value: 35 },
-  { name: "Healthcare", value: 20 },
-  { name: "Financials", value: 15 },
-  { name: "Consumer", value: 10 },
-  { name: "Energy", value: 10 },
-  { name: "Other", value: 10 },
-];
-
-const COLORS = ["#4f46e5", "#7c3aed", "#2563eb", "#3b82f6", "#0ea5e9", "#06b6d4"];
 
 const watchlistData = [
   { ticker: "AAPL", name: "Apple Inc.", price: "187.63", change: "+1.23", percentChange: "+0.66%", positive: true },
@@ -139,6 +129,10 @@ const Dashboard = () => {
   const [portfolioTimeframe, setPortfolioTimeframe] = useState("1Y");
   const [portfolioData, setPortfolioData] = useState<any[]>([]);
   const { toast } = useToast();
+  
+  // Market selection state
+  const [selectedMarket, setSelectedMarket] = useState("IND");
+  const marketOptions = ["US", "IND", "CRYPTO"];
 
   useEffect(() => {
     // Simulate loading
@@ -162,6 +156,18 @@ const Dashboard = () => {
       duration: 2000,
     });
   };
+  
+  // Market selection handler
+  const handleMarketChange = (market: string) => {
+    if (market === selectedMarket) return;
+    
+    setSelectedMarket(market);
+    toast({
+      title: "Market Changed",
+      description: `Now showing ${market} market data.`,
+      duration: 2000,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -169,38 +175,74 @@ const Dashboard = () => {
 
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
-          
-          <MarketOverview />
-          <NewsSentiment />
-          <div className="glass-morphism rounded-2xl p-6">
-            <h3 className="text-xl font-semibold mb-6">Hot Stocks</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border/50">
-                    <th className="text-left py-3 px-4 font-medium text-foreground/70">Symbol</th>
-                    <th className="text-left py-3 px-4 font-medium text-foreground/70">Name</th>
-                    <th className="text-right py-3 px-4 font-medium text-foreground/70">Price</th>
-                    <th className="text-right py-3 px-4 font-medium text-foreground/70">Change</th>
-                    <th className="text-right py-3 px-4 font-medium text-foreground/70">% Change</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {watchlistData.map((stock, index) => (
-                    <tr key={index} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
-                      <td className="py-4 px-4 font-medium">{stock.ticker}</td>
-                      <td className="py-4 px-4 text-foreground/70">{stock.name}</td>
-                      <td className="py-4 px-4 text-right">${stock.price}</td>
-                      <td className={`py-4 px-4 text-right ${stock.positive ? "text-green-600" : "text-red-600"}`}>
-                        {stock.change}
-                      </td>
-                      <td className={`py-4 px-4 text-right ${stock.positive ? "text-green-600" : "text-red-600"}`}>
-                        {stock.percentChange}
-                      </td>
-                    </tr>
+          {/* Dashboard header with market selection control */}
+          <div className="flex flex-col sm:flex-row justify-end items-center mt-3">
+           
+            
+            <div className="flex flex-wrap gap-3 mt-4 sm:mt-0">
+              {/* Market Selection Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="flex items-center">
+                    <Globe className="mr-2 h-4 w-4" />
+                    {selectedMarket} Market
+                    <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-32">
+                  {marketOptions.map((market) => (
+                    <DropdownMenuItem
+                      key={market}
+                      onClick={() => handleMarketChange(market)}
+                      className={`cursor-pointer ${
+                        selectedMarket === market ? "bg-secondary" : ""
+                      }`}
+                    >
+                      {market}
+                    </DropdownMenuItem>
                   ))}
-                </tbody>
-              </table>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+          
+         
+          
+          {/* Display all sections with the selected market */}
+          <div className="space-y-8">
+            <MarketOverview market={selectedMarket} />
+            <NewsSentiment market={selectedMarket} />
+            
+            <div className="glass-morphism rounded-2xl p-6">
+              <h3 className="text-xl font-semibold mb-6">{selectedMarket} Hot Stocks</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border/50">
+                      <th className="text-left py-3 px-4 font-medium text-foreground/70">Symbol</th>
+                      <th className="text-left py-3 px-4 font-medium text-foreground/70">Name</th>
+                      <th className="text-right py-3 px-4 font-medium text-foreground/70">Price</th>
+                      <th className="text-right py-3 px-4 font-medium text-foreground/70">Change</th>
+                      <th className="text-right py-3 px-4 font-medium text-foreground/70">% Change</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {watchlistData.map((stock, index) => (
+                      <tr key={index} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+                        <td className="py-4 px-4 font-medium">{stock.ticker}</td>
+                        <td className="py-4 px-4 text-foreground/70">{stock.name}</td>
+                        <td className="py-4 px-4 text-right">${stock.price}</td>
+                        <td className={`py-4 px-4 text-right ${stock.positive ? "text-green-600" : "text-red-600"}`}>
+                          {stock.change}
+                        </td>
+                        <td className={`py-4 px-4 text-right ${stock.positive ? "text-green-600" : "text-red-600"}`}>
+                          {stock.percentChange}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
