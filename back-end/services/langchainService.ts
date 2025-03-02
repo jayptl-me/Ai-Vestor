@@ -3,7 +3,7 @@ import type { NewsArticle, SentimentAnalysis } from "../models/news.model";
 import { ChatGroq } from "@langchain/groq";
 
 const llm = new ChatGroq({
-  model: "llama-3.3-70b-versatile",
+  model: "llama-3.1-8b-instant",
   temperature: 0,
   maxRetries: 2,
 });
