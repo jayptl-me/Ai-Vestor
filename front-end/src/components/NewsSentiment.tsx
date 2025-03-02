@@ -1,128 +1,24 @@
 import { useState, useEffect } from "react";
-import { 
- Tooltip, 
-  ResponsiveContainer, PieChart, Pie, Cell
+import {
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 import Navbar from "../components/Navbar";
-import { 
-  TrendingUp, TrendingDown, Clock, ExternalLink, ThumbsUp, ThumbsDown, ChevronRight
+import {
+  TrendingUp,
+  TrendingDown,
+  Clock,
+  ExternalLink,
+  ThumbsUp,
+  ThumbsDown,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 
-
-
-const stockSentiments = [
-  { 
-    ticker: "AAPL", 
-    name: "Apple Inc.", 
-    sentiment: 78, 
-    change: "+12", 
-    trending: "up",
-    articles: 386,
-    social: 15420 
-  },
-  { 
-    ticker: "MSFT", 
-    name: "Microsoft Corp.", 
-    sentiment: 82, 
-    change: "+6", 
-    trending: "up",
-    articles: 248,
-    social: 8630 
-  },
-  { 
-    ticker: "GOOGL", 
-    name: "Alphabet Inc.", 
-    sentiment: 65, 
-    change: "-4", 
-    trending: "down",
-    articles: 196,
-    social: 7250 
-  },
-  { 
-    ticker: "AMZN", 
-    name: "Amazon.com Inc.", 
-    sentiment: 70, 
-    change: "+8", 
-    trending: "up",
-    articles: 312,
-    social: 12840 
-  },
-  { 
-    ticker: "TSLA", 
-    name: "Tesla Inc.", 
-    sentiment: 58, 
-    change: "-7", 
-    trending: "down",
-    articles: 428,
-    social: 25680 
-  },
-];
-
-const marketNews = [
-  {
-    id: 1,
-    title: "Federal Reserve Signals Rate Cut Possible by September",
-    source: "Financial Times",
-    time: "2 hours ago",
-    sentiment: "positive",
-    impact: "high",
-    url: "#"
-  },
-  {
-    id: 2,
-    title: "Tech Giants Face New Regulatory Challenges in Europe",
-    source: "Reuters",
-    time: "4 hours ago",
-    sentiment: "negative",
-    impact: "medium",
-    url: "#"
-  },
-  {
-    id: 3,
-    title: "AI Sector Sees Record Investment in Q1 2023",
-    source: "Bloomberg",
-    time: "6 hours ago",
-    sentiment: "positive",
-    impact: "high",
-    url: "#"
-  },
-  {
-    id: 4,
-    title: "Oil Prices Stabilize After Recent Volatility",
-    source: "CNBC",
-    time: "8 hours ago",
-    sentiment: "neutral",
-    impact: "low",
-    url: "#"
-  },
-  {
-    id: 5,
-    title: "Chip Shortage Expected to Ease by Year End",
-    source: "Wall Street Journal",
-    time: "12 hours ago",
-    sentiment: "positive",
-    impact: "medium",
-    url: "#"
-  },
-  {
-    id: 6,
-    title: "Inflation Data Shows Signs of Cooling in Major Economies",
-    source: "The Economist",
-    time: "1 day ago",
-    sentiment: "positive",
-    impact: "high",
-    url: "#"
-  },
-];
-
-const overallSentiment = [
-  { name: "Positive", value: 55, color: "#4ade80" },
-  { name: "Neutral", value: 30, color: "#94a3b8" },
-  { name: "Negative", value: 15, color: "#f87171" },
-];
-
-
+// Utility functions (unchanged)
 const getSentimentColor = (value: number) => {
   if (value >= 60) return "#4ade80"; // green
   if (value >= 40) return "#facc15"; // yellow
@@ -147,34 +43,116 @@ const getImpactClass = (impact: string) => {
   return "bg-slate-100 text-slate-800";
 };
 
-const NewsSentiment = () => {
+const getDominantSentiment = (sentiment: { bullish: number; bearish: number; neutral: number }) => {
+  const { bullish, bearish, neutral } = sentiment;
+  if (bullish > bearish && bullish > neutral) return "positive";
+  if (bearish > bullish && bearish > neutral) return "negative";
+  return "neutral";
+};
+
+const getImpact = (sentiment: { bullish: number; bearish: number; neutral: number }) => {
+  const maxSentiment = Math.max(sentiment.bullish, sentiment.bearish, sentiment.neutral);
+  if (maxSentiment >= 70) return "high";
+  if (maxSentiment >= 40) return "medium";
+  return "low";
+};
+
+const timeAgo = (dateString: string) => {
+  const now = new Date();
+  const published = new Date(dateString);
+  const diffMs = now.getTime() - published.getTime();
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffHours < 1) return "Less than an hour ago";
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+};
+
+// Stock data by market with random but plausible values
+const stockDataByMarket = {
+  IND: [
+    { ticker: "RELIANCE", name: "Reliance Industries", sentiment: 60, change: "+5", trending: "up", articles: 50 },
+    { ticker: "TCS", name: "Tata Consultancy", sentiment: 70, change: "+8", trending: "up", articles: 40 },
+    { ticker: "HDFCBANK", name: "HDFC Bank", sentiment: 45, change: "-3", trending: "down", articles: 30 },
+    { ticker: "INFY", name: "Infosys", sentiment: 65, change: "+6", trending: "up", articles: 35 },
+    { ticker: "COALINDIA", name: "Coal India", sentiment: 75, change: "+10", trending: "up", articles: 25 },
+  ],
+  US: [
+    { ticker: "AAPL", name: "Apple Inc.", sentiment: 72, change: "+7", trending: "up", articles: 45 },
+    { ticker: "MSFT", name: "Microsoft Corp.", sentiment: 68, change: "+4", trending: "up", articles: 38 },
+    { ticker: "GOOGL", name: "Alphabet Inc.", sentiment: 55, change: "-2", trending: "down", articles: 32 },
+    { ticker: "AMZN", name: "Amazon.com Inc.", sentiment: 63, change: "+5", trending: "up", articles: 40 },
+    { ticker: "TSLA", name: "Tesla Inc.", sentiment: 48, change: "-6", trending: "down", articles: 50 },
+  ],
+  CRYPTO: [
+    { ticker: "BTC", name: "Bitcoin", sentiment: 67, change: "+9", trending: "up", articles: 60 },
+    { ticker: "ETH", name: "Ethereum", sentiment: 62, change: "+4", trending: "up", articles: 55 },
+    { ticker: "SOL", name: "Solana", sentiment: 40, change: "-5", trending: "down", articles: 35 },
+    { ticker: "ADA", name: "Cardano", sentiment: 53, change: "-3", trending: "down", articles: 30 },
+    { ticker: "XRP", name: "Ripple", sentiment: 70, change: "+6", trending: "up", articles: 45 },
+  ],
+};
+
+interface NewsSentimentProps {
+  market: string;
+  sentimentData?: any;
+}
+
+const NewsSentiment = ({ market, sentimentData }: NewsSentimentProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStock, setSelectedStock] = useState<string | null>(null);
+  const [marketNews, setMarketNews] = useState<any[]>([]);
+  const [overallSentiment, setOverallSentiment] = useState<any[]>([]);
+  const [stockSentiments, setStockSentiments] = useState<any[]>([]);
 
   useEffect(() => {
-    // Simulate data loading
-    const timer = setTimeout(() => {
+    if (sentimentData) {
+      processSentimentData(sentimentData);
       setIsLoading(false);
-    }, 1200);
-    
-    return () => clearTimeout(timer);
-  }, []);
+    } else {
+      const timer = setTimeout(() => {
+        // Use hardcoded stock data based on market if no sentimentData
+        setStockSentiments(stockDataByMarket[market as keyof typeof stockDataByMarket] || stockDataByMarket.IND);
+        setIsLoading(false);
+      }, 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [sentimentData, market]);
+
+  const processSentimentData = (data: any) => {
+    const overall = [
+      { name: "Positive", value: data.overallSentiment.bullish, color: "#4ade80" },
+      { name: "Neutral", value: data.overallSentiment.neutral, color: "#94a3b8" },
+      { name: "Negative", value: data.overallSentiment.bearish, color: "#f87171" },
+    ];
+    setOverallSentiment(overall);
+
+    const news = data.articles.map((article: any, index: number) => ({
+      id: index + 1,
+      title: article.title,
+      source: article.source,
+      time: timeAgo(article.publishedAt),
+      sentiment: getDominantSentiment(article.sentiment),
+      impact: getImpact(article.sentiment),
+      url: article.url,
+    }));
+    setMarketNews(news);
+
+    // Set stock sentiments based on market
+    setStockSentiments(stockDataByMarket[market as keyof typeof stockDataByMarket] || stockDataByMarket.IND);
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
       <main className="pt-5 pb-16">
         <div className="container mx-auto px-4">
-          {/* Page Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">News & Sentiment Analysis</h1>
-            {/* <p className="text-foreground/70">
-              Real-time analysis of financial news and social media sentiment to help identify market trends before they become obvious.
-            </p> */}
+            <h1 className="text-3xl font-bold mb-2">News & Sentiment Analysis - {market} Market</h1>
           </div>
-          
-          {/* Latest News - MOVED TO TOP */}
+
+          {/* Market Moving News */}
           <div className="glass-morphism rounded-2xl p-6 mb-8">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-semibold">Market Moving News</h3>
@@ -183,55 +161,58 @@ const NewsSentiment = () => {
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             </div>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {marketNews.map((news) => (
-                <a 
-                  key={news.id} 
-                  href={news.url}
-                  className="block glass-morphism hover:shadow-md transition-shadow rounded-xl overflow-hidden"
-                >
-                  <div className="p-5">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${getSentimentClass(news.sentiment)}`}>
-                        {getSentimentText(news.sentiment)}
-                      </div>
-                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactClass(news.impact)}`}>
-                        {news.impact.charAt(0).toUpperCase() + news.impact.slice(1)} Impact
-                      </div>
-                    </div>
-                    <h4 className="font-semibold mb-2 line-clamp-2">{news.title}</h4>
-                    <div className="flex items-center text-sm text-foreground/60 mt-4">
-                      <div className="flex items-center space-x-4">
-                        <div>{news.source}</div>
-                        <div className="flex items-center">
-                          <Clock className="h-3 w-3 mr-1" />
-                          {news.time}
+              {isLoading ? (
+                <div>Loading news...</div>
+              ) : (
+                marketNews.map((news) => (
+                  <a
+                    key={news.id}
+                    href={news.url}
+                    className="block glass-morphism hover:shadow-md transition-shadow rounded-xl overflow-hidden"
+                  >
+                    <div className="p-5">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${getSentimentClass(news.sentiment)}`}>
+                          {getSentimentText(news.sentiment)}
+                        </div>
+                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactClass(news.impact)}`}>
+                          {news.impact.charAt(0).toUpperCase() + news.impact.slice(1)} Impact
                         </div>
                       </div>
-                      <div className="ml-auto">
-                        <ExternalLink className="h-4 w-4 text-primary" />
+                      <h4 className="font-semibold mb-2 line-clamp-2">{news.title}</h4>
+                      <div className="flex items-center text-sm text-foreground/60 mt-4">
+                        <div className="flex items-center space-x-4">
+                          <div>{news.source}</div>
+                          <div className="flex items-center">
+                            <Clock className="h-3 w-3 mr-1" />
+                            {news.time}
+                          </div>
+                        </div>
+                        <div className="ml-auto">
+                          <ExternalLink className="h-4 w-4 text-primary" />
+                        </div>
+                      </div>
+                      <div className="flex justify-between mt-4 pt-4 border-t border-border/30 text-sm">
+                        <button className="flex items-center text-green-600">
+                          <ThumbsUp className="h-4 w-4 mr-1" />
+                          Bullish
+                        </button>
+                        <button className="flex items-center text-red-600">
+                          <ThumbsDown className="h-4 w-4 mr-1" />
+                          Bearish
+                        </button>
                       </div>
                     </div>
-                    <div className="flex justify-between mt-4 pt-4 border-t border-border/30 text-sm">
-                      <button className="flex items-center text-green-600">
-                        <ThumbsUp className="h-4 w-4 mr-1" />
-                        Bullish
-                      </button>
-                      <button className="flex items-center text-red-600">
-                        <ThumbsDown className="h-4 w-4 mr-1" />
-                        Bearish
-                      </button>
-                    </div>
-                  </div>
-                </a>
-              ))}
+                  </a>
+                ))
+              )}
             </div>
           </div>
-          
-          {/* Overview - MOVED AFTER NEWS */}
+
+          {/* Overview */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-            {/* Overall Sentiment - Takes 1 column */}
+            {/* Overall Sentiment */}
             <div className="glass-morphism rounded-2xl p-6">
               <h3 className="text-xl font-semibold mb-6">Overall Sentiment</h3>
               <div className="h-64">
@@ -257,11 +238,11 @@ const NewsSentiment = () => {
                         ))}
                       </Pie>
                       <Tooltip
-                        formatter={(value) => [`${value}%`, 'Sentiment']}
-                        contentStyle={{ 
-                          borderRadius: '8px', 
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                          border: 'none'
+                        formatter={(value) => [`${value}%`, "Sentiment"]}
+                        contentStyle={{
+                          borderRadius: "8px",
+                          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                          border: "none",
                         }}
                       />
                     </PieChart>
@@ -272,8 +253,8 @@ const NewsSentiment = () => {
                 {overallSentiment.map((item) => (
                   <div key={item.name} className="flex items-center justify-between">
                     <div className="flex items-center">
-                      <div 
-                        className="w-3 h-3 rounded-full mr-2" 
+                      <div
+                        className="w-3 h-3 rounded-full mr-2"
                         style={{ backgroundColor: item.color }}
                       ></div>
                       <span>{item.name}</span>
@@ -283,12 +264,10 @@ const NewsSentiment = () => {
                 ))}
               </div>
             </div>
-            
-            {/* Sentiment Analysis by Stock - Takes 3 columns */}
+
+            {/* Sentiment Analysis by Stock */}
             <div className="lg:col-span-3 glass-morphism rounded-2xl p-6">
-              <h3 className="text-xl font-semibold mb-6">
-                Sentiment Analysis by Stock
-              </h3>
+              <h3 className="text-xl font-semibold mb-6">Sentiment Analysis by Stock</h3>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -300,59 +279,69 @@ const NewsSentiment = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {stockSentiments.map((stock) => (
-                      <tr 
-                        key={stock.ticker} 
-                        className={`border-b border-border/50 hover:bg-secondary/30 transition-colors ${
-                          selectedStock === stock.ticker ? 'bg-secondary/50' : ''
-                        }`}
-                        onClick={() => setSelectedStock(selectedStock === stock.ticker ? null : stock.ticker)}
-                      >
-                        <td className="py-4 px-4">
-                          <div className="flex items-center">
-                            <div className="font-medium">{stock.ticker}</div>
-                            <div className="text-foreground/60 ml-2 text-sm">{stock.name}</div>
-                          </div>
+                    {isLoading ? (
+                      <tr>
+                        <td colSpan={4} className="text-center py-4">
+                          Loading stock sentiments...
                         </td>
-                        <td className="py-4 px-4 text-center">
-                          <div className="w-full flex justify-center">
-                            <div className="flex items-center justify-center w-14 h-14 relative">
-                              <svg className="w-full h-full" viewBox="0 0 36 36">
-                                <path
-                                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                  fill="none"
-                                  stroke="#e5e7eb"
-                                  strokeWidth="3"
-                                />
-                                <path
-                                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                  fill="none"
-                                  stroke={getSentimentColor(stock.sentiment)}
-                                  strokeWidth="3"
-                                  strokeDasharray={`${stock.sentiment}, 100`}
-                                />
-                              </svg>
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-sm font-semibold">{stock.sentiment}</span>
+                      </tr>
+                    ) : (
+                      stockSentiments.map((stock) => (
+                        <tr
+                          key={stock.ticker}
+                          className={`border-b border-border/50 hover:bg-secondary/30 transition-colors ${selectedStock === stock.ticker ? "bg-secondary/50" : ""
+                            }`}
+                          onClick={() =>
+                            setSelectedStock(selectedStock === stock.ticker ? null : stock.ticker)
+                          }
+                        >
+                          <td className="py-4 px-4">
+                            <div className="flex items-center">
+                              <div className="font-medium">{stock.ticker}</div>
+                              <div className="text-foreground/60 ml-2 text-sm">{stock.name}</div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 text-center">
+                            <div className="w-full flex justify-center">
+                              <div className="flex items-center justify-center w-14 h-14 relative">
+                                <svg className="w-full h-full" viewBox="0 0 36 36">
+                                  <path
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#e5e7eb"
+                                    strokeWidth="3"
+                                  />
+                                  <path
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke={getSentimentColor(stock.sentiment)}
+                                    strokeWidth="3"
+                                    strokeDasharray={`${stock.sentiment}, 100`}
+                                  />
+                                </svg>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <span className="text-sm font-semibold">{stock.sentiment}</span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="py-4 px-4 text-center">
-                          <div className={`flex items-center justify-center ${
-                            stock.trending === "up" ? "text-green-600" : "text-red-600"
-                          }`}>
-                            {stock.trending === "up" ? (
-                              <TrendingUp className="h-4 w-4 mr-1" />
-                            ) : (
-                              <TrendingDown className="h-4 w-4 mr-1" />
-                            )}
-                            <span>{stock.change}</span>
-                          </div>
-                        </td>
-                        <td className="py-4 px-4 text-center">{stock.articles}</td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className="py-4 px-4 text-center">
+                            <div
+                              className={`flex items-center justify-center ${stock.trending === "up" ? "text-green-600" : "text-red-600"
+                                }`}
+                            >
+                              {stock.trending === "up" ? (
+                                <TrendingUp className="h-4 w-4 mr-1" />
+                              ) : (
+                                <TrendingDown className="h-4 w-4 mr-1" />
+                              )}
+                              <span>{stock.change}</span>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 text-center">{stock.articles}</td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
