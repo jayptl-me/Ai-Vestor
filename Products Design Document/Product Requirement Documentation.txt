@@ -1,0 +1,428 @@
+# AI-vestor Product Requirements Document (PRD)
+
+## Project Overview
+
+### Project Name and Tagline
+**AI-vestor**: "Navigate Markets with Confidence, Powered by AI"
+
+### Problem Statement
+The financial markets can be intimidating and complex, especially for beginners. Many individuals struggle with:
+1. Understanding market fundamentals and terminology
+2. Building confidence in their trading and investment decisions
+3. Analyzing market sentiment and news impacts
+4. Predicting price movements without emotional bias
+5. Finding reliable guidance without paying for expensive financial advisors
+
+AI-vestor addresses these challenges by combining AI-powered analysis with educational elements, creating a platform that grows with users as they advance from novice to experienced investors.
+
+### Target Audience
+1. **Beginners**: Individuals with little to no experience in stock markets or trading who need guidance and education
+2. **Intermediate Users**: Those with basic knowledge seeking to enhance decision-making with AI-powered insights
+3. **Advanced Users**: Experienced traders looking to optimize their workflow and gain additional data-driven insights
+
+### Value Proposition
+AI-vestor stands apart by integrating:
+- AI/ML-powered stock and cryptocurrency price prediction models
+- Educational content with gamification elements for skill development
+- Comprehensive market sentiment analysis and news aggregation
+- All-in-one platform approach that eliminates the need for multiple tools
+- Decision support that combines technical analysis with emotional intelligence
+
+### Project Goals
+- Provide accurate stock and cryptocurrency price predictions to support informed decision-making
+- Create an engaging learning path for beginners to understand market fundamentals
+- Deliver comprehensive market overview and sentiment analysis
+- Consolidate news and insights in an easily digestible format
+- Implement gamification elements to encourage continuous learning and engagement
+
+### Success Metrics
+- Prediction model accuracy (compared to actual market movements)
+- User engagement with educational content
+- Time spent on platform
+- User progression through learning modules
+- Positive user feedback on decision support
+- Reliability of system during market volatility
+
+### Team Composition
+- **Jay Patel**: Backend Development
+- **Mirza Izhan**: Product & UX/UI Design
+- **Dhruv Vakharwala**: Backend Development & ML Implementation
+- **Hitanshu Jariwala**: Frontend Development
+
+## User Research & Insights
+
+### User Pain Points
+Through our hackathon research, we identified several key pain points:
+- Difficulty learning financial concepts without personalized guidance
+- Lack of confidence in making investment decisions
+- Overwhelming amount of market information without clear context
+- Limited access to professional-level analysis tools
+- No structured path to progress from beginner to advanced investor
+- Decision paralysis due to emotional factors when investing
+- Lack of personalized investment mentorship
+
+### Research Methods
+Our user understanding came through:
+- Open-ended user interviews with potential users across experience levels
+- Analysis of existing trading platforms and educational resources
+- Rapid feedback cycles during hackathon development
+- Competitive analysis of market solutions
+
+### Key Design Insights
+The research led to these foundational design principles:
+1. **Simplicity First**: Clean, minimal, and professional interface that doesn't overwhelm
+2. **Progressive Disclosure**: Reveal complexity as users gain experience
+3. **Data Visualization**: Transform complex data into visually understandable formats
+4. **Contextual Education**: Learning elements integrated within the actual trading interface
+5. **Emotional Support**: Design elements that counterbalance emotional decision-making
+
+### User Journey Map
+
+The primary user journey follows this progression:
+1. **Onboarding**: Assessment of knowledge level and investment goals
+2. **Home Page Exploration**: Introduction to core features and platform capabilities
+3. **Dashboard Engagement**: Exploring market overview, watchlists, and sentiment analysis
+4. **Prediction Tool Usage**: Leveraging AI models for price prediction
+5. **Learning System Interaction**: Engaging with educational content and gamification elements
+6. **Continued Engagement**: Building daily habits through streak features and rewards
+
+### Prioritized User Needs
+1. AI-powered price prediction to validate investment decisions
+2. Clear, jargon-free explanations of market concepts
+3. Consolidated market overview and sentiment analysis
+4. Easily digestible news and its potential market impact
+5. Progressive learning path with achievement markers
+
+## Feature Requirements
+
+### Core Features Implemented
+
+#### Home Page Feature Showcase
+- **Description**: Engaging landing page highlighting core platform capabilities
+- **User Stories**:
+  - As a new user, I want to quickly understand what the platform offers
+  - As a returning user, I want easy access to key features
+- **Acceptance Criteria**:
+  - Clear visual presentation of main features
+  - Intuitive navigation to all major sections
+  - Personalized recommendations based on user profile
+
+#### Dashboard
+- **Description**: Comprehensive view of market conditions and personalized insights
+- **User Stories**:
+  - As an investor, I want a quick overview of market conditions
+  - As a trader, I want to monitor my watchlist and market sentiment
+- **Acceptance Criteria**:
+  - Market overview with key indices and trends
+  - Watchlist of "hot stocks" with performance metrics
+  - Overall market sentiment visualization
+  - Stock-specific sentiment analysis
+  - Curated market news feed
+  - Interactive elements for deeper exploration
+
+#### AI Price Prediction Tool
+- **Description**: Dedicated page for ML model that analyzes historical data to predict future price movements
+- **User Stories**:
+  - As a trader, I want to see predicted price movements for specific stocks
+  - As an investor, I want to understand the confidence level and reasoning behind predictions
+- **Acceptance Criteria**:
+  - User can select specific stocks for analysis
+  - Visual representation of predicted price movements
+  - Confidence metrics and supporting factors
+  - Historical accuracy information
+  - Integration with watchlist functionality
+
+#### Learning Management System
+- **Description**: Educational platform with structured content and gamification elements
+- **User Stories**:
+  - As a beginner, I want to learn market concepts in an engaging way
+  - As a user, I want recognition for my learning progress
+- **Acceptance Criteria**:
+  - Structured learning paths by topic and difficulty
+  - Interactive lessons with practical applications
+  - Gamification elements (streaks, points, badges)
+  - Progress tracking and achievements
+
+### Gamification Features
+
+#### 7-Day Streak System
+- **Description**: Reward system for consistent platform engagement
+- **User Stories**:
+  - As a user, I want incentives to engage daily with the platform
+  - As a learner, I want valuable tips that help me avoid mistakes
+- **Acceptance Criteria**:
+  - Visual streak counter and progress tracking
+  - Daily check-in mechanism
+  - Streak rewards including "Pro Tips" to avoid major mistakes
+  - Recovery mechanisms for missed days
+
+#### Points & Badges System
+- **Description**: Visual recognition system for achievements and platform engagement
+- **User Stories**:
+  - As a user, I want recognition for my progress and achievements
+  - As a learner, I want visual indicators of my expertise level
+- **Acceptance Criteria**:
+  - Points awarded for learning completion, prediction analysis, and daily engagement
+  - Themed badges representing different skill areas and achievements
+  - Leaderboards or personal progress tracking
+  - Meaningful progression system with tangible benefits
+
+### Feature Prioritization
+**Must-Haves (Implemented in Hackathon):**
+1. Dashboard with Market Overview and Sentiment Analysis
+2. AI Price Prediction Tool
+3. Basic Learning Management System
+4. Core Gamification Features (Streaks and Badges)
+
+**Nice-to-Haves (Partially Implemented):**
+1. Advanced Sentiment Analysis
+2. Expanded Learning Content Library
+3. Social Sharing of Achievements
+4. Advanced Market News Analysis
+
+**Future Expansion:**
+1. AI Portfolio Health Analyzer
+2. Personalized Investment Suggestions
+3. Risk Analysis Tools
+4. Community Features and Expert Insights
+
+## UX/UI Design Specifications
+
+### Information Architecture
+The application follows a structured navigation with four main sections:
+
+1. **Home**
+   - Feature Showcase
+   - Platform Introduction
+   - Quick Access to Core Features
+   - Getting Started Guidance
+
+2. **Dashboard**
+   - Market Overview
+   - Watchlist ("Hot Stocks")
+   - Overall Market Sentiment
+   - Stock-Specific Sentiment Analysis
+   - Market News Feed
+
+3. **Price Prediction**
+   - Stock Selection
+   - Prediction Visualization
+   - Analysis Factors
+   - Confidence Metrics
+   - Historical Accuracy
+
+4. **Learning System**
+   - Course Library
+   - Progress Tracking
+   - Gamification Elements
+   - Achievement Showcase
+
+### Design System
+
+#### Color Palette
+- Primary Red: #dc2626 (Losses, Warnings, Bearish Indicators)
+- Primary Green: #16a34a (Gains, Positive Indicators, Bullish Signals)
+- Primary Blue: #306EE8 (Interactive Elements, CTAs, Links)
+- Light Background: #F1F5F94C (Panel Backgrounds, Cards)
+- Dark Gray: #22252AB2 (Secondary Text, Icons)
+- Black: #22252A (Primary Text, Headers)
+- Neutrals: Standard grayscale for supporting elements
+
+#### Typography
+- Font Family: Poppins, sans-serif
+- Hierarchy:
+  - Headings: Semi-bold, larger sizes
+  - Body Text: Regular weight, high readability emphasis
+  - Data Points: Monospace for numerical data
+  - Alerts: Bold for important notifications
+
+#### UI Components
+- Cards: For encapsulating related information
+- Data Visualizations: Charts, graphs, and heat maps
+- Interactive Elements: Buttons, toggles, sliders
+- Navigation: Tab-based for main sections, breadcrumbs for deep navigation
+- Modals: For focused tasks and educational content
+
+### User Flow Diagrams
+The primary flows implemented:
+
+1. **Onboarding Flow**
+   - Knowledge assessment
+   - Interest selection
+   - Goal setting
+   - Dashboard introduction
+
+2. **Dashboard Exploration Flow**
+   - Market overview review
+   - Watchlist management
+   - Sentiment analysis interpretation
+   - News consumption
+
+3. **Prediction Analysis Flow**
+   - Stock selection
+   - Timeframe selection
+   - Prediction review
+   - Supporting data exploration
+   - Action consideration
+
+4. **Learning Engagement Flow**
+   - Topic selection
+   - Content consumption
+   - Knowledge verification
+   - Streak maintenance
+   - Badge collection
+
+## Implementation Details
+
+### Technology Stack
+- **Frontend**: React with TypeScript, Tailwind CSS
+- **Backend**: Python, FastAPI
+- **Database**: PostgreSQL with Prisma ORM
+- **Caching**: Redis for performance optimization
+- **ML/AI**: TensorFlow, Keras, NumPy for prediction models
+- **Design**: Figma for wireframing and prototyping
+
+### Data Models
+
+#### User Model
+- Profile information
+- Knowledge level
+- Learning progress
+- Streaks and achievements
+- Points and badges
+
+#### Asset Model
+- Historical data
+- Technical indicators
+- Prediction models
+- Related news and sentiment
+
+#### Learning Content Model
+- Structured by topic and difficulty
+- Interactive elements
+- Assessment components
+- Achievement triggers
+
+#### Gamification Model
+- Streak tracking
+- Points system
+- Badge definitions
+- Reward mechanisms
+
+### API Architecture
+- RESTful API design
+- Redis caching for performance
+- Endpoints for:
+  - User authentication and management
+  - Market data retrieval
+  - ML model predictions
+  - News and sentiment analysis
+  - Learning content delivery
+  - Gamification state management
+
+### Technical Challenges
+- ML model deployment in a resource-constrained environment
+- Real-time data integration from multiple sources
+- Balancing prediction accuracy with performance
+- LLM integration for natural language analysis of news
+- Neural network optimization for faster predictions
+- Redis implementation for caching frequently accessed data
+
+## Future Roadmap
+
+### Planned Features
+1. **AI-Powered Portfolio Health Analyzer**
+   - Automated risk assessment
+   - Diversification analysis
+   - Performance optimization recommendations
+
+2. **Personalized Investment Suggestions**
+   - AI-generated recommendations based on user profile
+   - Risk tolerance alignment
+   - Goal-based suggestions
+
+3. **Investment Risk Analyzer**
+   - Detailed risk assessment of individual assets
+   - Portfolio-level risk metrics
+   - Stress testing scenarios
+
+4. **Advanced Learning Paths**
+   - Industry-specific education modules
+   - Strategy masterclasses
+   - Expert-level technical analysis
+
+5. **Enhanced Gamification**
+   - Challenge modes
+   - Virtual trading competitions
+   - Advanced achievement system
+
+### Known Limitations
+- Prediction accuracy bounded by market unpredictability
+- Limited historical data for newer assets
+- Educational content requires continuous updating
+- News analysis depth constrained by processing power
+
+## Testing & Validation
+
+### Testing Approach
+- Rapid prototype testing with team members
+- Functional testing of prediction models against historical data
+- Interface usability sessions
+- Cross-device compatibility verification
+
+### Key Findings
+- Users strongly responded to the combination of education and practical tools
+- Prediction explanations were as valuable as the predictions themselves
+- Visual representation of complex data significantly improved understanding
+- Gamification elements increased engagement with educational content
+- The streak feature motivated consistent platform usage
+
+### Iterative Improvements
+- Simplified initial dashboard based on feedback
+- Enhanced prediction explanation visualizations
+- Restructured learning path to better match user progression
+- Improved news relevance scoring algorithm
+- Refined gamification reward timing for optimal engagement
+
+## Design Process Contribution
+
+As the Product and UX/UI Designer, my contributions focused on:
+
+1. **Problem Discovery and Definition**
+   - Leading user interviews to identify core pain points
+   - Analyzing existing solutions and their limitations
+   - Defining the core value proposition and differentiators
+
+2. **Conceptual Framework Development**
+   - Transforming technical capabilities into user-friendly experiences
+   - Creating the conceptual model for learning progression
+   - Designing the information architecture with four clear sections
+   - Developing the gamification strategy for sustained engagement
+
+3. **User Experience Design**
+   - Mapping comprehensive user journeys
+   - Creating wireframes for key application screens
+   - Developing interactive prototypes
+   - Establishing visual design language with the defined color palette and Poppins typography
+
+4. **Collaborative Implementation**
+   - Working directly with frontend developers to implement designs
+   - Adapting to technical constraints while preserving user experience
+   - Iterating designs based on implementation feedback
+   - Providing visual assets and design specifications
+
+5. **Critical Thinking and Adaptation**
+   - Responding to significant pivots in product direction (80% change)
+   - Prioritizing features based on technical feasibility and user value
+   - Balancing ideal experience with hackathon time constraints
+   - Ensuring coherence across all product elements despite rapid development
+
+The development process was highly adaptive, requiring significant analytical thinking, brainstorming, and rapid prototyping as we navigated changes in project scope and technical capabilities.
+
+## Conclusion
+
+AI-vestor represents a novel approach to democratizing financial market participation by combining AI-powered analysis with accessible education and engaging gamification. The platform addresses a clear market need for tools that grow with users' expertise while providing valuable decision support at every level.
+
+The unique combination of market dashboard, AI prediction tools, and learning system with streak-based engagement creates a compelling user experience that can transform how beginners approach the financial markets. The gamification elements—particularly the 7-day streak feature and points/badges system—provide the motivation needed to build consistent habits and develop investing skills over time.
+
+This PRD documents our hackathon achievement while laying the groundwork for future development. With continued refinement and feature expansion, AI-vestor has the potential to become an essential platform for investors at all experience levels.
