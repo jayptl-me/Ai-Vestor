@@ -1,5 +1,6 @@
 # AI Investor
 
+# YT Video Live Link: https://youtu.be/isGQDk_WciE
 # Video Link: https://drive.google.com/file/d/1n6Bytw6tvyQ_XKxD8r0AWszrvIJ4fTMD/view?usp=drivesdk
 
 ## Overview
