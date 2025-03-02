@@ -82,7 +82,7 @@ const Navbar = () => {
                     >
                       {link.name}
                       <span
-                        
+
                         className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary transform origin-left transition-transform duration-300 ${location.pathname === link.path ? "scale-x-100" : "scale-x-0"
                           } group-hover:scale-x-100`}
                       ></span>
@@ -113,19 +113,7 @@ const Navbar = () => {
             {/* Auth Buttons */}
             <div className="hidden md:flex items-center space-x-4">
               <ThemeToggle />
-              <Button
-                variant="ghost"
-                size="sm"
-                className="hover:bg-white/20 dark:hover:bg-black/20"
-              >
-                Log in
-              </Button>
-              <Button
-                size="sm"
-                className="bg-primary hover:bg-primary/90 shadow-md transition-all"
-              >
-                Sign up
-              </Button>
+
             </div>
 
             {/* Mobile Menu Button */}
@@ -197,12 +185,16 @@ const Navbar = () => {
           </nav>
 
           <div className="mt-auto flex flex-col space-y-3 pt-6 border-t border-border">
-            <Button variant="outline" className="w-full justify-center">
-              Log in
-            </Button>
-            <Button className="w-full justify-center bg-primary hover:bg-primary/90 shadow-md">
-              Sign up
-            </Button>
+            <Link to="/auth">
+              <Button variant="outline" className="w-full justify-center">
+                Log in
+              </Button>
+            </Link>
+            <Link to="/auth">
+              <Button className="w-full justify-center bg-primary hover:bg-primary/90 shadow-md">
+                Sign up
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

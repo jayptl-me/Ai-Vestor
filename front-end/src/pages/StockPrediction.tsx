@@ -30,13 +30,11 @@ const timeframeOptions = [
   { value: "5 minutes", label: "5 Min" },
   { value: "1 hour", label: "1 Hour" },
   { value: "1 day", label: "1 Day" },
-  { value: "5 days", label: "5 Days" }
 ];
 
 const intervalOptions = [
   { value: "1m", label: "1 Min" },
   { value: "5m", label: "5 Min" },
-  { value: "1d", label: "1 Day" }
 ];
 
 const StockPrediction = () => {
@@ -248,16 +246,7 @@ const StockPrediction = () => {
                     ))}
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start"
-                    onClick={handleAddToWatchlist}
-                  >
-                    <PlusCircle className="h-4 w-4 mr-2" />
-                    Add to Watchlist
-                  </Button>
-                </div>
+
               </div>
 
 

@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./components/ThemeProvider";
 
 import LearnYard from "./pages/LearnYard";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/stock-prediction" element={<StockPrediction />} />
             <Route path="/learn-yard" element={<LearnYard />} />
