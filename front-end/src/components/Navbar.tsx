@@ -82,11 +82,7 @@ const Navbar = () => {
                     >
                       {link.name}
                       <span
-                        className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary transform origin-left transition-transform duration-300 ${
-                          location.pathname === link.path
-                            ? "scale-x-100"
-                            : "scale-x-0"
-                        } group-hover:scale-x-100`}
+                        
                         className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary transform origin-left transition-transform duration-300 ${location.pathname === link.path ? "scale-x-100" : "scale-x-0"
                           } group-hover:scale-x-100`}
                       ></span>
