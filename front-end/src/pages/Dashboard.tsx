@@ -12,143 +12,158 @@ import {
 } from "../components/ui/dropdown-menu";
 import { Button } from "../components/ui/button";
 
-// Sample data for different timeframes
-const generatePortfolioData = (timeframe: string) => {
-  // Base values for starting points
-  const baseValue = 15000;
-
-  // Define data structure for each timeframe
-  const valuesByTimeframe: Record<string, any[]> = {
-    "1M": [],
-    "3M": [],
-    "6M": [],
-    "YTD": [],
-    "1Y": [
-      { name: "Jan", value: 15000 },
-      { name: "Feb", value: 16200 },
-      { name: "Mar", value: 15800 },
-      { name: "Apr", value: 17300 },
-      { name: "May", value: 18900 },
-      { name: "Jun", value: 19200 },
-      { name: "Jul", value: 20100 },
-      { name: "Aug", value: 21500 },
-      { name: "Sep", value: 22800 },
-      { name: "Oct", value: 23200 },
-      { name: "Nov", value: 24600 },
-      { name: "Dec", value: 26000 },
-    ],
-    "5Y": []
-  };
-
-  // Generate 1M data with weekly intervals
-  const monthlyValues = [baseValue * 1.71, baseValue * 1.73, baseValue * 1.70, baseValue * 1.73];
-  const now = new Date();
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-  // Populate 1M data
-  for (let i = 0; i < monthlyValues.length; i++) {
-    const date = new Date(now);
-    date.setDate(now.getDate() - ((monthlyValues.length - 1 - i) * 7));
-    valuesByTimeframe["1M"].push({
-      name: `${monthNames[date.getMonth()]} ${date.getDate()}`,
-      value: monthlyValues[i]
-    });
-  }
-
-  // Populate 3M data
-  const threeMonthValues = [baseValue * 1.55, baseValue * 1.60, baseValue * 1.63, baseValue * 1.67, baseValue * 1.70, baseValue * 1.73];
-  for (let i = 0; i < threeMonthValues.length; i++) {
-    const date = new Date(now);
-    date.setDate(now.getDate() - ((threeMonthValues.length - 1 - i) * 14));
-    valuesByTimeframe["3M"].push({
-      name: `${monthNames[date.getMonth()]} ${date.getDate()}`,
-      value: threeMonthValues[i]
-    });
-  }
-
-  // Populate 6M data
-  const sixMonthValues = [baseValue * 1.40, baseValue * 1.43, baseValue * 1.49, baseValue * 1.55, baseValue * 1.60, baseValue * 1.63, baseValue * 1.67, baseValue * 1.70, baseValue * 1.73];
-  for (let i = 0; i < sixMonthValues.length; i++) {
-    const date = new Date(now);
-    date.setMonth(now.getMonth() - (sixMonthValues.length - 1 - i));
-    valuesByTimeframe["6M"].push({
-      name: monthNames[date.getMonth()],
-      value: sixMonthValues[i]
-    });
-  }
-
-  // Populate YTD data
-  const ytdValues = [baseValue * 1.47, baseValue * 1.52, baseValue * 1.55, baseValue * 1.60, baseValue * 1.63, baseValue * 1.67, baseValue * 1.70, baseValue * 1.73];
-  const currentMonth = now.getMonth();
-  for (let i = 0; i <= currentMonth; i++) {
-    if (i < ytdValues.length) {
-      valuesByTimeframe["YTD"].push({
-        name: monthNames[i],
-        value: ytdValues[i]
-      });
-    }
-  }
-
-  // Create 5Y data with a general uptrend and some volatility
-  let fiveYearValue = baseValue * 0.65; // Starting at a lower point 5 years ago
-  const startDate = new Date(now);
-  startDate.setFullYear(now.getFullYear() - 5);
-
-  for (let year = 1; year <= 5; year++) {
-    for (let month = 1; month <= 12; month++) {
-      const growth = 1 + (Math.random() * 0.04 - 0.01); // Random growth between -1% and 3%
-      fiveYearValue *= growth;
-
-      if (year === 5 && month > 3) continue; // Only show up to current month in the 5th year
-
-      const date = new Date(startDate);
-      date.setMonth(startDate.getMonth() + ((year - 1) * 12) + (month - 1));
-
-      valuesByTimeframe["5Y"].push({
-        name: date.toLocaleDateString('en-US', { year: '2-digit', month: 'short' }),
-        value: Math.round(fiveYearValue * 100) / 100
-      });
-    }
-  }
-
-  // Return the appropriate data for the selected timeframe
-  return valuesByTimeframe[timeframe] || valuesByTimeframe["1Y"];
+// Map market values to API country codes
+const marketToCountryCode = {
+  US: "us",
+  IND: "in",
+  CRYPTO: "crypto", // Adjust if the API uses a different code for crypto
 };
 
+// Function to fetch data from the API
+const fetchMarketData = async (market: string, timeframe: string) => {
+  const countryCode = marketToCountryCode[market as keyof typeof marketToCountryCode] || "us";
+  try {
+    const response = await fetch(
+      `https://odoo-charusat-ai-vestor-2025-wgl2.onrender.com/api/hotdata/indexes?country=${countryCode}&timeframe=${timeframe}&format=full`
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${market} market data`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error fetching ${market} market data:`, error);
+    return null;
+  }
+};
 
-const watchlistData = [
-  { ticker: "AAPL", name: "Apple Inc.", price: "187.63", change: "+1.23", percentChange: "+0.66%", positive: true },
-  { ticker: "MSFT", name: "Microsoft Corp.", price: "403.78", change: "+3.45", percentChange: "+0.86%", positive: true },
-  { ticker: "GOOGL", name: "Alphabet Inc.", price: "147.92", change: "+0.54", percentChange: "+0.37%", positive: true },
-  { ticker: "AMZN", name: "Amazon.com Inc.", price: "174.63", change: "-1.26", percentChange: "-0.72%", positive: false },
-  { ticker: "TSLA", name: "Tesla Inc.", price: "175.21", change: "-3.54", percentChange: "-1.98%", positive: false },
-];
+// Function to fetch sentiment data
+const fetchSentimentData = async (market: string) => {
+  const countryCode = marketToCountryCode[market as keyof typeof marketToCountryCode] || "us";
+  try {
+    const response = await fetch(
+      `https://odoo-charusat-ai-vestor-2025-wgl2.onrender.com/api/analysis/overallsentiment/${countryCode}`
+    );
+    if (!response.ok) throw new Error(`Failed to fetch sentiment data for ${market}`);
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching sentiment data:`, error);
+    return null;
+  }
+};
+
+// Function to generate portfolio data based on fetched market data
+const generatePortfolioData = (timeframe: string, marketData: any, market: string) => {
+  if (!marketData || !marketData.indexes || marketData.indexes.length === 0) {
+    return [];
+  }
+
+  // Define primary index based on market
+  const primaryIndexSymbol = {
+    IND: "^NSEI", // NIFTY 50 for India
+    US: "^GSPC",  // S&P 500 for US (adjust based on API response)
+    CRYPTO: "BTC", // Bitcoin (adjust based on API response)
+  }[market] || "^NSEI";
+
+  const primaryIndexData = marketData.indexes.find(
+    (index: any) => index.symbol === primaryIndexSymbol
+  );
+
+  if (!primaryIndexData || !primaryIndexData.historicalData) {
+    return [];
+  }
+
+  const historicalData = primaryIndexData.historicalData.map((entry: any) => {
+    const date = new Date(entry.date);
+    return {
+      name: date.toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      value: entry.price,
+    };
+  });
+
+  switch (timeframe) {
+    case "1W":
+      return historicalData;
+    case "1M":
+      return historicalData.slice(-28);
+    case "3M":
+      return historicalData.slice(-84);
+    case "6M":
+      return historicalData.slice(-168);
+    case "YTD":
+      return historicalData.filter((entry: any) => {
+        const entryDate = new Date(entry.name);
+        return entryDate.getFullYear() === new Date().getFullYear();
+      });
+    case "1Y":
+      return historicalData.slice(-252);
+    case "5Y":
+      return historicalData;
+    default:
+      return historicalData;
+  }
+};
+
+// Dummy watchlist data (generalized for now, replace with API data if available)
+const watchlistData = {
+  US: [
+    { ticker: "AAPL", name: "Apple Inc.", price: "187.63", change: "+1.23", percentChange: "+0.66%", positive: true },
+    { ticker: "MSFT", name: "Microsoft Corp.", price: "403.78", change: "+3.45", percentChange: "+0.86%", positive: true },
+    { ticker: "GOOGL", name: "Alphabet Inc.", price: "147.92", change: "+0.54", percentChange: "+0.37%", positive: true },
+    { ticker: "AMZN", name: "Amazon.com Inc.", price: "174.63", change: "-1.26", percentChange: "-0.72%", positive: false },
+    { ticker: "TSLA", name: "Tesla Inc.", price: "175.21", change: "-3.54", percentChange: "-1.98%", positive: false },
+  ],
+  IND: [
+    { ticker: "RELIANCE", name: "Reliance Industries", price: "2987.63", change: "+12.23", percentChange: "+0.41%", positive: true },
+    { ticker: "TCS", name: "Tata Consultancy", price: "4098.78", change: "+34.45", percentChange: "+0.85%", positive: true },
+    { ticker: "HDFCBANK", name: "HDFC Bank", price: "1447.92", change: "-5.54", percentChange: "-0.38%", positive: false },
+    { ticker: "INFY", name: "Infosys", price: "1674.63", change: "+11.26", percentChange: "+0.68%", positive: true },
+    { ticker: "ICICIBANK", name: "ICICI Bank", price: "1075.21", change: "-3.54", percentChange: "-0.33%", positive: false },
+  ],
+  CRYPTO: [
+    { ticker: "BTC", name: "Bitcoin", price: "67253.11", change: "+234.23", percentChange: "+2.34%", positive: true },
+    { ticker: "ETH", name: "Ethereum", price: "3842.65", change: "+56.45", percentChange: "+1.56%", positive: true },
+    { ticker: "SOL", name: "Solana", price: "152.32", change: "-3.21", percentChange: "-3.21%", positive: false },
+    { ticker: "ADA", name: "Cardano", price: "0.54", change: "-0.01", percentChange: "-1.87%", positive: false },
+    { ticker: "XRP", name: "Ripple", price: "0.62", change: "+0.01", percentChange: "+1.61%", positive: true },
+  ],
+};
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [portfolioTimeframe, setPortfolioTimeframe] = useState("1Y");
+  const [portfolioTimeframe, setPortfolioTimeframe] = useState("1W");
   const [portfolioData, setPortfolioData] = useState<any[]>([]);
+  const [marketData, setMarketData] = useState<any>(null);
   const { toast } = useToast();
-  
-  // Market selection state
+
   const [selectedMarket, setSelectedMarket] = useState("IND");
   const marketOptions = ["US", "IND", "CRYPTO"];
 
+  const [sentimentData, setSentimentData] = useState<any>(null);
+
   useEffect(() => {
-    // Simulate loading
-    setIsLoading(true);
-
-    const timer = setTimeout(() => {
-      setPortfolioData(generatePortfolioData(portfolioTimeframe));
+    const loadMarketData = async () => {
+      setIsLoading(true);
+      const [marketResponse, sentimentResponse] = await Promise.all([
+        fetchMarketData(selectedMarket, portfolioTimeframe),
+        fetchSentimentData(selectedMarket),
+      ]);
+      setMarketData(marketResponse);
+      setSentimentData(sentimentResponse); // Store sentiment data
+      setPortfolioData(generatePortfolioData(portfolioTimeframe, marketResponse, selectedMarket));
       setIsLoading(false);
-    }, 800);
+    };
 
-    return () => clearTimeout(timer);
-  }, [portfolioTimeframe]);
+    loadMarketData();
+  }, [selectedMarket, portfolioTimeframe]);
 
   const handleTimeframeChange = (timeframe: string) => {
     if (timeframe === portfolioTimeframe) return;
-
     setPortfolioTimeframe(timeframe);
     toast({
       title: "Timeframe Updated",
@@ -156,11 +171,9 @@ const Dashboard = () => {
       duration: 2000,
     });
   };
-  
-  // Market selection handler
+
   const handleMarketChange = (market: string) => {
     if (market === selectedMarket) return;
-    
     setSelectedMarket(market);
     toast({
       title: "Market Changed",
@@ -172,15 +185,10 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
-          {/* Dashboard header with market selection control */}
           <div className="flex flex-col sm:flex-row justify-end items-center mt-3">
-           
-            
             <div className="flex flex-wrap gap-3 mt-4 sm:mt-0">
-              {/* Market Selection Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="flex items-center">
@@ -194,9 +202,7 @@ const Dashboard = () => {
                     <DropdownMenuItem
                       key={market}
                       onClick={() => handleMarketChange(market)}
-                      className={`cursor-pointer ${
-                        selectedMarket === market ? "bg-secondary" : ""
-                      }`}
+                      className={`cursor-pointer ${selectedMarket === market ? "bg-secondary" : ""}`}
                     >
                       {market}
                     </DropdownMenuItem>
@@ -205,45 +211,48 @@ const Dashboard = () => {
               </DropdownMenu>
             </div>
           </div>
-          
-         
-          
-          {/* Display all sections with the selected market */}
+
           <div className="space-y-8">
-            <MarketOverview market={selectedMarket} />
-            <NewsSentiment market={selectedMarket} />
-            
-            <div className="glass-morphism rounded-2xl p-6">
-              <h3 className="text-xl font-semibold mb-6">{selectedMarket} Hot Stocks</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-border/50">
-                      <th className="text-left py-3 px-4 font-medium text-foreground/70">Symbol</th>
-                      <th className="text-left py-3 px-4 font-medium text-foreground/70">Name</th>
-                      <th className="text-right py-3 px-4 font-medium text-foreground/70">Price</th>
-                      <th className="text-right py-3 px-4 font-medium text-foreground/70">Change</th>
-                      <th className="text-right py-3 px-4 font-medium text-foreground/70">% Change</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {watchlistData.map((stock, index) => (
-                      <tr key={index} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
-                        <td className="py-4 px-4 font-medium">{stock.ticker}</td>
-                        <td className="py-4 px-4 text-foreground/70">{stock.name}</td>
-                        <td className="py-4 px-4 text-right">${stock.price}</td>
-                        <td className={`py-4 px-4 text-right ${stock.positive ? "text-green-600" : "text-red-600"}`}>
-                          {stock.change}
-                        </td>
-                        <td className={`py-4 px-4 text-right ${stock.positive ? "text-green-600" : "text-red-600"}`}>
-                          {stock.percentChange}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            {isLoading ? (
+              <p>Loading market data...</p>
+            ) : (
+              <>
+                <MarketOverview market={selectedMarket} portfolioData={portfolioData} />
+                <NewsSentiment market={selectedMarket} sentimentData={sentimentData} />                <div className="glass-morphism rounded-2xl p-6">
+                  <h3 className="text-xl font-semibold mb-6">{selectedMarket} Hot Stocks</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-border/50">
+                          <th className="text-left py-3 px-4 font-medium text-foreground/70">Symbol</th>
+                          <th className="text-left py-3 px-4 font-medium text-foreground/70">Name</th>
+                          <th className="text-right py-3 px-4 font-medium text-foreground/70">Price</th>
+                          <th className="text-right py-3 px-4 font-medium text-foreground/70">Change</th>
+                          <th className="text-right py-3 px-4 font-medium text-foreground/70">% Change</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {watchlistData[selectedMarket as keyof typeof watchlistData].map((stock, index) => (
+                          <tr key={index} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+                            <td className="py-4 px-4 font-medium">{stock.ticker}</td>
+                            <td className="py-4 px-4 text-foreground/70">{stock.name}</td>
+                            <td className="py-4 px-4 text-right">
+                              {selectedMarket === "CRYPTO" ? "$" : "₹"}{stock.price}
+                            </td>
+                            <td className={`py-4 px-4 text-right ${stock.positive ? "text-green-600" : "text-red-600"}`}>
+                              {stock.change}
+                            </td>
+                            <td className={`py-4 px-4 text-right ${stock.positive ? "text-green-600" : "text-red-600"}`}>
+                              {stock.percentChange}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </main>
