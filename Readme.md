@@ -1,5 +1,7 @@
 # AI Investor
 
+# Live Link - https://odoo-charusat-ai-vestor-2025-1.onrender.com
+
 <img width="1470" alt="Screenshot 2025-03-02 at 10 44 14 AM" src="https://github.com/user-attachments/assets/d4724ea8-1b97-4a0a-87f7-205ed81c7852" />
 
 
