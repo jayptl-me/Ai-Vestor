@@ -61,7 +61,7 @@ export async function getMarketNews(country = "us"): Promise<NewsArticle[]> {
     const query =
       country.toLowerCase() === "in"
         ? "Indian stock market OR BSE OR NSE"
-        : "stock market OR NYSE OR NASDAQ";
+        : "US stock market OR NYSE OR NASDAQ";
 
     const url = new URL(`${BASE_URL}/search`);
     url.searchParams.append("q", query);

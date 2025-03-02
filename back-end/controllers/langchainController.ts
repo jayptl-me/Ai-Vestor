@@ -92,7 +92,7 @@ langchainRoutes.get(
       }
 
       // Get stock-specific news
-      const newsArticles = await getStockNews(symbol, stockInfo.name);
+      const newsArticles = await getStockNews(stockInfo.name);
 
       if (newsArticles.length === 0) {
         return c.json(
