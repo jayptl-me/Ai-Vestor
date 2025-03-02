@@ -82,10 +82,10 @@ const Index = () => {
               />
               <ActionCard
                 icon={<AreaChart className="h-7 w-7 text-primary" />}
-                title="Portfolio Health"
-                description="Get a comprehensive analysis of your current portfolio with personalized improvement suggestions."
-                action="Check Portfolio Health"
-                link="/portfolio-health"
+                title="LearnYard"
+                description="Get to know about the investing world."
+                action="Learn More"
+                link="/learn-yard"
                 delay={200}
                 isVisible={visibleSection}
               />
@@ -104,14 +104,7 @@ const Index = () => {
                 Join thousands of investors who are already leveraging our AI-powered platform
                 to make smarter investment decisions and achieve better returns.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 font-medium px-8">
-                  Create Free Account
-                </Button>
-                <Button variant="outline" size="lg" className="font-medium px-8">
-                  Explore Features
-                </Button>
-              </div>
+
             </div>
           </div>
         </section>

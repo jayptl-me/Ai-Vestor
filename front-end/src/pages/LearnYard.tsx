@@ -7,6 +7,7 @@ interface Video {
   title: string;
   duration: string;
   completed?: boolean;
+  youtubeUrl?: string;
 }
 
 interface Course {
@@ -30,12 +31,31 @@ const courses: Course[] = [
     color: 'green',
     emoji: '🚀',
     videos: [
-      { title: 'Why should you Invest?', duration: '00:08:25', completed: true },
-      { title: 'Market Intermediaries', duration: '00:08:58' },
-      { title: 'All about the Initial Public Offer (IPO)', duration: '00:08:07' },
-      { title: 'Why do stock prices fluctuate?', duration: '00:03:51' },
-      { title: 'How does a trading platform work?', duration: '00:07:07' },
-      { title: 'Stock Market Index', duration: '00:07:09' },
+
+      {
+        "title": "Can I start trading with 1,000rs? | Money Psychology",
+        "duration": "00:08:32",
+        "youtubeUrl": "https://www.youtube.com/embed/A-LmEw6fsTg?si=jd8LokwFN03wDzgS",
+        completed: true,
+      },
+      {
+        "title": "How to deal with consecutive losses? | Money Psychology",
+        "duration": "00:13:00",
+        "youtubeUrl": "https://www.youtube.com/embed/_UcBW1a9gPg?si=4MB-VhMlTpEDRFha"
+      },
+      {
+        "title": "Complete guide to start trading | Money Psychology",
+        "duration": "00:10:08",
+        "youtubeUrl": "https://www.youtube.com/embed/C6CNKSj82ko?si=O_6MxFcc9UoYlvur"
+      },
+      {
+        "title": "Options Trading Simplified - Common Mistakes to Avoid | Money Psychology",
+        "duration": "00:12:20",
+        "youtubeUrl": "https://www.youtube.com/embed/C6CNKSj82ko?si=RPxWXUZNqI0Dzpb7"
+      },
+
+
+
     ]
   },
   {
@@ -112,28 +132,23 @@ const LearnYard: React.FC = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
   const [showSidebar, setShowSidebar] = useState(true);
-  
+
   // If no course is selected, show the landing page
   if (!selectedCourse) {
     return (
       <div className="w-full min-h-screen bg-background flex flex-col font-sans">
         <Navbar />
-        
+
         <div className="max-w-6xl mx-auto p-6 pt-24 relative">
           {/* Gradient Background Elements */}
-         
-          
           {/* Header Section */}
           <div className="text-center mb-16 opacity-100 transform-none">
-
             <h1 className="text-2xl md:text-3xl font-bold leading-tight mt-10">
-            Stock Market Learning, Made Simple &  <span className="text-primary">Rewarding!</span>
-              
+              Stock Market Learning, Made Simple &  <span className="text-primary">Rewarding!</span>
             </h1>
             <p className="text-muted-foreground mt-4 text-lg max-w-2xl mx-auto">
               Watch videos. Earn points. Build skills. Join thousands of Z-gen investors unlocking financial freedom.
             </p>
-           
           </div>
 
           {/* Information Cards */}
@@ -155,7 +170,7 @@ const LearnYard: React.FC = () => {
                 text: "Clarity. Confidence. Control. You'll spot opportunities, avoid costly mistakes, and build wealth for your future—on your own terms."
               }
             ].map((card, index) => (
-              <div 
+              <div
                 key={index}
                 className="glass-morphism p-6 rounded-xl bg-gradient-to-br from-background to-accent/30 backdrop-blur-sm border border-border shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
               >
@@ -174,72 +189,70 @@ const LearnYard: React.FC = () => {
             <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
               Stack your knowledge from beginner to pro. Each level unlocks deeper insights and advanced strategies.
             </p>
-            
+
             {/* Stacked Cards Layout */}
             <div className="mt-24 relative">
-  
-  
-  {/* Modern Card Grid Layout */}
-  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-    {courses.map((course) => {
-      const color = colorClasses[course.color as keyof typeof colorClasses];
-      
-      return (
-        <div
-          key={course.id}
-          className={`p-6 rounded-xl border-2 ${color.border} ${color.glow} ${color.hover} backdrop-blur-sm bg-gradient-to-br ${color.bg} cursor-pointer transition-all duration-300 hover:-translate-y-2 flex flex-col h-full`}
-          onClick={() => setSelectedCourse(course)}
-        >
-          {/* Card Header */}
-          <div className="flex items-center justify-between mb-4">
-            <div className={`w-14 h-14 rounded-xl ${color.iconBg} flex items-center justify-center`}>
-              {course.icon}
-            </div>
-            
-            <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${color.badge}`}>
-              {levelEmoji[course.level]} {course.level}
-            </span>
-          </div>
-          
-          {/* Card Content */}
-          <h3 className="font-bold text-xl mb-3">{course.title}</h3>
-          <p className="text-muted-foreground mb-6 flex-grow">{course.description}</p>
-          
-          {/* Course Features */}
-          <div className="grid grid-cols-1 gap-2 mb-6">
-            {['Core concepts', 'Market basics', 'Trading tools'].map((feature, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded-full bg-background flex items-center justify-center">
-                  <CheckCircle size={12} className="text-primary" />
-                </div>
-                <span className="text-sm">{feature}</span>
+              {/* Modern Card Grid Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {courses.map((course) => {
+                  const color = colorClasses[course.color as keyof typeof colorClasses];
+
+                  return (
+                    <div
+                      key={course.id}
+                      className={`p-6 rounded-xl border-2 ${color.border} ${color.glow} ${color.hover} backdrop-blur-sm bg-gradient-to-br ${color.bg} cursor-pointer transition-all duration-300 hover:-translate-y-2 flex flex-col h-full`}
+                      onClick={() => setSelectedCourse(course)}
+                    >
+                      {/* Card Header */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className={`w-14 h-14 rounded-xl ${color.iconBg} flex items-center justify-center`}>
+                          {course.icon}
+                        </div>
+
+                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${color.badge}`}>
+                          {levelEmoji[course.level]} {course.level}
+                        </span>
+                      </div>
+
+                      {/* Card Content */}
+                      <h3 className="font-bold text-xl mb-3">{course.title}</h3>
+                      <p className="text-muted-foreground mb-6 flex-grow">{course.description}</p>
+
+                      {/* Course Features */}
+                      <div className="grid grid-cols-1 gap-2 mb-6">
+                        {['Core concepts', 'Market basics', 'Trading tools'].map((feature, i) => (
+                          <div key={i} className="flex items-center gap-2">
+                            <div className="w-5 h-5 rounded-full bg-background flex items-center justify-center">
+                              <CheckCircle size={12} className="text-primary" />
+                            </div>
+                            <span className="text-sm">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Card Footer */}
+                      <div className="flex items-center justify-between pt-4 border-t border-border/30 mt-auto">
+                        <div className="flex items-center gap-2">
+                          <Clock size={14} className="text-muted-foreground" />
+                          <span className="text-sm text-muted-foreground">{course.videos.length} videos</span>
+                        </div>
+
+                        <Button size="sm" className="rounded-full px-4 gap-2">
+                          <Play size={14} />
+                          Start
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            ))}
-          </div>
-          
-          {/* Card Footer */}
-          <div className="flex items-center justify-between pt-4 border-t border-border/30 mt-auto">
-            <div className="flex items-center gap-2">
-              <Clock size={14} className="text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">{course.videos.length} videos</span>
             </div>
-            
-            <Button size="sm" className="rounded-full px-4 gap-2">
-              <Play size={14} />
-              Start
-            </Button>
-          </div>
-        </div>
-      );
-    })}
-  </div>
-</div>
           </div>
         </div>
       </div>
     );
   }
-  
+
   // Calculate progress based on completed videos in the selected course
   const videos = selectedCourse.videos;
   const progress = Math.round(((videos.filter(v => v.completed).length) / videos.length) * 100);
@@ -249,7 +262,7 @@ const LearnYard: React.FC = () => {
   return (
     <div className="w-full min-h-screen bg-background flex flex-col font-sans">
       <Navbar />
-      
+
       {/* Main Content */}
       <div className="flex flex-grow overflow-hidden mt-24">
         {/* Sidebar */}
@@ -262,7 +275,7 @@ const LearnYard: React.FC = () => {
                 </span>
                 <h3 className="font-medium text-foreground">{selectedCourse.title}</h3>
               </div>
-              <button 
+              <button
                 onClick={() => setSelectedCourse(null)}
                 className="text-primary hover:text-primary/80 text-sm"
               >
@@ -270,7 +283,7 @@ const LearnYard: React.FC = () => {
                 Back
               </button>
             </div>
-            
+
             <div className="p-4 border-b border-border bg-accent/30">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">Your progress</span>
@@ -281,10 +294,9 @@ const LearnYard: React.FC = () => {
               </div>
               <div className="flex justify-between text-xs text-muted-foreground mt-1">
                 <span>{videos.filter(v => v.completed).length}/{videos.length} lessons</span>
-                
               </div>
             </div>
-            
+
             <div className="divide-y divide-border">
               {videos.map((video, index) => (
                 <div
@@ -301,8 +313,6 @@ const LearnYard: React.FC = () => {
                         <h4 className={`font-medium ${activeVideoIndex === index ? 'text-primary' : 'text-foreground'}`}>{video.title}</h4>
                       </div>
                       <div className="flex items-center mt-1 text-sm text-muted-foreground">
-                        
-                        
                       </div>
                     </div>
                     {video.completed ? <Bookmark size={16} className="text-primary ml-2" /> : null}
@@ -316,7 +326,7 @@ const LearnYard: React.FC = () => {
         {/* Video Content */}
         <div className="flex-1 flex flex-col overflow-y-auto">
           {/* Toggle Sidebar Button */}
-          <button 
+          <button
             onClick={() => setShowSidebar(!showSidebar)}
             className="md:hidden fixed top-20 left-3 z-20 bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
           >
@@ -327,30 +337,44 @@ const LearnYard: React.FC = () => {
             <div className="bg-card rounded-xl shadow-md overflow-hidden border border-border">
               {/* Video Player */}
               <div className="relative bg-gray-900 aspect-video flex items-center justify-center group">
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-900/40 via-purple-900/30 to-pink-900/40"></div>
-                <button className="relative z-10 bg-primary hover:bg-primary/90 text-primary-foreground w-16 h-16 rounded-full flex items-center justify-center transition-transform duration-300 hover:scale-110">
-                  <Play size={28} fill="currentColor" />
-                </button>
-                
-                <div className="absolute bottom-6 left-6 text-white">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    color.progress
-                  }`}>
-                    {selectedCourse.emoji} {selectedCourse.level}
-                  </span>
-                  <h3 className="text-xl font-bold mt-2 drop-shadow-md">{videos[activeVideoIndex].title}</h3>
-                </div>
-                
-                <div className="absolute bottom-6 right-6 flex space-x-2">
-                  <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white w-8 h-8 rounded-full flex items-center justify-center">
-                    <BookOpen size={14} />
-                  </button>
-                  <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white w-8 h-8 rounded-full flex items-center justify-center">
-                    <Award size={14} />
-                  </button>
-                </div>
+                {videos[activeVideoIndex].youtubeUrl ? (
+                  <iframe
+                    width="560"
+                    height="315"
+                    src={videos[activeVideoIndex].youtubeUrl}
+                    title={videos[activeVideoIndex].title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                ) : (
+                  <>
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-900/40 via-purple-900/30 to-pink-900/40"></div>
+                    <button className="relative z-10 bg-primary hover:bg-primary/90 text-primary-foreground w-16 h-16 rounded-full flex items-center justify-center transition-transform duration-300 hover:scale-110">
+                      <Play size={28} fill="currentColor" />
+                    </button>
+
+                    <div className="absolute bottom-6 left-6 text-white">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${color.progress}`}>
+                        {selectedCourse.emoji} {selectedCourse.level}
+                      </span>
+                      <h3 className="text-xl font-bold mt-2 drop-shadow-md">{videos[activeVideoIndex].title}</h3>
+                    </div>
+
+                    <div className="absolute bottom-6 right-6 flex space-x-2">
+                      <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white w-8 h-8 rounded-full flex items-center justify-center">
+                        <BookOpen size={14} />
+                      </button>
+                      <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white w-8 h-8 rounded-full flex items-center justify-center">
+                        <Award size={14} />
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
-              
+
               {/* Video Info */}
               <div className="p-6 md:p-8">
                 <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -365,40 +389,37 @@ const LearnYard: React.FC = () => {
                     {videos[activeVideoIndex].duration.substring(3)}
                   </span>
                 </div>
-                
+
                 <h2 className="text-2xl font-bold text-foreground mb-3">{videos[activeVideoIndex].title}</h2>
-                
+
                 <p className="text-muted-foreground mb-8 leading-relaxed">
-                  {activeVideoIndex === 0 ? 
+                  {activeVideoIndex === 0 ?
                     "Learn why investing in stocks is crucial for building wealth and achieving financial freedom. This video covers the basics of stock investments and how they can help you grow your money over time while outpacing inflation." :
                     "Explore the key concepts and strategies behind this important investing topic. You'll gain practical knowledge you can apply immediately to improve your investment results and build long-term wealth."
                   }
                 </p>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                  
                 </div>
-                
+
                 <div className="flex flex-wrap items-center justify-between border-t border-border pt-6">
                   <div className="flex space-x-4">
-                    
                     <button className="flex items-center text-sm font-medium text-primary hover:text-primary/80 bg-primary/10 px-4 py-2 rounded-full">
                       <Award size={16} className="mr-2" />
                       Take Quiz
                     </button>
                   </div>
-                  
+
                   <div className="flex items-center mt-4 md:mt-0">
-                    
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          
+
           {/* Navigation Buttons */}
           <div className="bg-card border-t border-border p-4 flex justify-between sticky bottom-0">
-            <button 
+            <button
               className={`flex items-center px-5 py-2.5 rounded-full transition-transform duration-200 hover:-translate-x-1 ${activeVideoIndex > 0 ? 'bg-accent hover:bg-accent/80 text-foreground' : 'bg-muted text-muted-foreground cursor-not-allowed'}`}
               disabled={activeVideoIndex === 0}
               onClick={() => activeVideoIndex > 0 && setActiveVideoIndex(activeVideoIndex - 1)}
@@ -406,8 +427,8 @@ const LearnYard: React.FC = () => {
               <ChevronLeft size={16} className="mr-2" />
               Previous
             </button>
-            
-            <button 
+
+            <button
               className={`flex items-center px-5 py-2.5 rounded-full transition-transform duration-200 hover:translate-x-1 ${activeVideoIndex < videos.length - 1 ? 'bg-primary hover:bg-primary/90 text-primary-foreground' : 'bg-muted text-muted-foreground cursor-not-allowed'}`}
               disabled={activeVideoIndex === videos.length - 1}
               onClick={() => activeVideoIndex < videos.length - 1 && setActiveVideoIndex(activeVideoIndex + 1)}

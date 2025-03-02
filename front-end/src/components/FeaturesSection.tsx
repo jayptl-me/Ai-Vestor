@@ -9,30 +9,14 @@ const features = [
     description:
       "Advanced AI models analyze historical data and market patterns to forecast future stock price movements with high accuracy.",
   },
-  {
-    icon: TrendingUp,
-    title: "Investment Risk Analyzer",
-    description:
-      "Comprehensive risk assessment tools that evaluate market volatility, liquidity risks, and portfolio-specific factors.",
-  },
+
   {
     icon: LineChart,
     title: "News & Sentiment Analysis",
     description:
       "Real-time analysis of financial news and social media sentiment to identify market trends before they become obvious.",
   },
-  {
-    icon: Lightbulb,
-    title: "Personalized Suggestions",
-    description:
-      "Tailored investment recommendations based on your goals, risk tolerance, and market opportunities.",
-  },
-  {
-    icon: AreaChart,
-    title: "Portfolio Health Analysis",
-    description:
-      "Ongoing evaluation of your investment portfolio with alerts for potential issues and rebalancing suggestions.",
-  },
+
   {
     icon: Globe,
     title: "Global Market Sentiment",
@@ -90,11 +74,10 @@ const FeaturesSection = () => {
               key={index}
               ref={(el) => (featuresRef.current[index] = el)}
               data-index={index}
-              className={`glass-morphism p-6 rounded-2xl transition-all duration-700 ease-out transform ${
-                visibleFeatures.includes(index)
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-20"
-              }`}
+              className={`glass-morphism p-6 rounded-2xl transition-all duration-700 ease-out transform ${visibleFeatures.includes(index)
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-20"
+                }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6">

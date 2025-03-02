@@ -24,18 +24,16 @@ const HeroSection = () => {
         <div className="max-w-4xl mx-auto text-center">
           {/* Subtitle */}
           <div
-            className={`inline-block px-3 py-1 mb-6 rounded-full bg-primary/10 text-primary text-sm font-medium transform transition-all duration-700 ease-out ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
+            className={`inline-block px-3 py-1 mb-6 rounded-full bg-primary/10 text-primary text-sm font-medium transform transition-all duration-700 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
           >
             Next-Generation Investment Intelligence
           </div>
 
           {/* Main heading */}
           <h1
-            className={`text-4xl md:text-5xl lg:text-6xl font-bold leading-tight md:leading-tight lg:leading-tight mb-6 transition-all duration-700 delay-100 ease-out ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
+            className={`text-4xl md:text-5xl lg:text-6xl font-bold leading-tight md:leading-tight lg:leading-tight mb-6 transition-all duration-700 delay-100 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
           >
             Make Smarter Investment Decisions with{" "}
             <span className="text-primary">AI-Powered</span> Insights
@@ -43,47 +41,31 @@ const HeroSection = () => {
 
           {/* Description */}
           <p
-            className={`text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto mb-10 transition-all duration-700 delay-200 ease-out ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
+            className={`text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto mb-10 transition-all duration-700 delay-200 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
           >
-            Our platform combines advanced artificial intelligence with comprehensive market data 
+            Our platform combines advanced artificial intelligence with comprehensive market data
             to help you predict trends, analyze risks, and optimize your investment portfolio.
           </p>
 
           {/* CTA Buttons */}
           <div
-            className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-300 ease-out ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
+            className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-300 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
           >
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-white font-medium px-8 py-6 h-auto"
-            >
-              Get Started
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="font-medium px-8 py-6 h-auto"
-            >
-              Explore Features
-            </Button>
+
           </div>
 
           {/* Stats */}
           <div
-            className={`mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center transition-all duration-700 delay-400 ease-out ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
+            className={`mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center transition-all duration-700 delay-400 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
           >
             {[
               { value: "93%", label: "Prediction Accuracy" },
-              { value: "10M+", label: "Data Points Analyzed" },
+              { value: "10k+", label: "Data Points Analyzed" },
               { value: "24/7", label: "Real-time Updates" },
-              { value: "50K+", label: "Active Investors" },
+              { value: "99%", label: "Validated Data" },
             ].map((stat, index) => (
               <div key={index} className="glass-morphism rounded-xl p-4">
                 <div className="text-2xl md:text-3xl font-bold text-primary mb-1">
