@@ -3,9 +3,14 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { CourseService } from '../services/courseServices';
+import jwt from 'jsonwebtoken';
+import { ProgressService } from '../services/progressServices';
 
 const courseRoutes = new Hono();
 const courseService = new CourseService();
+const progressService = new ProgressService();
+const SECRET_KEY = process.env.SECRET_KEY || 'your-secret-key';
+
 
 // Schemas for validation
 const courseCreateSchema = z.object({
@@ -96,6 +101,21 @@ courseRoutes.post('/', zValidator('json', courseCreateSchema), async (c) => {
     } catch (error) {
         console.error('Error creating course:', error);
         return c.json({ success: false, error: 'Failed to create course' }, 500);
+    }
+});
+
+courseRoutes.post('/:id/complete', async (c) => {
+    const id = c.req.param('id');
+    const token = c.req.header('Authorization')?.split(' ')[1];
+    if (!token) return c.json({ success: false, error: 'Unauthorized' }, 401);
+
+    try {
+        const { userId } = jwt.verify(token, SECRET_KEY) as { userId: string };
+        await progressService.completeCourse(userId, id);
+        return c.json({ success: true, message: 'Course completed' });
+    } catch (error) {
+        console.error('Error completing course:', error);
+        return c.json({ success: false, error: 'Failed to complete course' }, 500);
     }
 });
 
