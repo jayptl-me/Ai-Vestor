@@ -1,6 +1,7 @@
 # AI Investor
 
-![Uploading Screenshot 2025-03-02 at 10.43.28 AM.png…]()
+<img width="1470" alt="Screenshot 2025-03-02 at 10 44 14 AM" src="https://github.com/user-attachments/assets/d4724ea8-1b97-4a0a-87f7-205ed81c7852" />
+
 
 # YT Video Live Link: https://youtu.be/isGQDk_WciE
 # Video Link: https://drive.google.com/file/d/1n6Bytw6tvyQ_XKxD8r0AWszrvIJ4fTMD/view?usp=drivesdk
