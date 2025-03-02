@@ -63,9 +63,9 @@ const HeroSection = () => {
           >
             {[
               { value: "93%", label: "Prediction Accuracy" },
-              { value: "10M+", label: "Data Points Analyzed" },
+              { value: "10k+", label: "Data Points Analyzed" },
               { value: "24/7", label: "Real-time Updates" },
-              { value: "50K+", label: "Active Investors" },
+              { value: "99%", label: "Validated Data" },
             ].map((stat, index) => (
               <div key={index} className="glass-morphism rounded-xl p-4">
                 <div className="text-2xl md:text-3xl font-bold text-primary mb-1">
