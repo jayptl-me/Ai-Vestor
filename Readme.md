@@ -91,8 +91,8 @@ ai-investor/
 
 ```sh
 cd back-end
-pip install -r requirements.txt
-python main.py
+bun install
+bun run dev
 ```
 
 ### 🔹 Frontend
@@ -108,7 +108,7 @@ npm run dev
 
 ```sh
 Copy
-cd ml-models
+cd neural-network
 pip install -r requirements.txt
 python main.py
 ```
